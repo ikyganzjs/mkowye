@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://img1.pixhost.to/images/10772/669911394_media.jpg') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 40px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+            margin: 0 0 20px 0;
+            white-space: nowrap;
+            border-right: 3px solid #fff;
+            padding-right: 8px;
+            animation: blink .7s infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #ffd700;
+            color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #ffea65;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="typed"></h1>
+
+    <div class="btn-group">
+        <a href="/api"><button class="btn">Docs API</button></a>
+        <a href="/about"><button class="btn">About</button></a>
+    </div>
+
+    <script>
+        const texts = [
+            "Iky'S Cloud Services",
+            "Modern Cloud Api'S Infrastructure"
+        ];
+
+        let index = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const el = document.getElementById("typed");
+            const currentText = texts[index];
+
+            if (!isDeleting) {
+                el.textContent = currentText.substring(0, charIndex++);
+                if (charIndex > currentText.length) {
+                    setTimeout(() => isDeleting = true, 900);
+                }
+            } else {
+                el.textContent = currentText.substring(0, charIndex--);
+                if (charIndex < 0) {
+                    isDeleting = false;
+                    index = (index + 1) % texts.length;
+                }
+            }
+
+            setTimeout(typeEffect, 120);
+        }
+
+        typeEffect();
+    </script>
+
+</body>
+</html>
