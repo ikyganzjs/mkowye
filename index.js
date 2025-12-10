@@ -70,10 +70,6 @@ global.fetchJson = async (url, options = {}) => {
   }
 };
 
-const BASE = process.env.API_BASE;
-const KEY = process.env.API_KEY;
-const USER = process.env.API_USERNAME;
-const TOKEN = encodeURIComponent(process.env.API_TOKEN);
 global.apikey = process.env.APIKEY || null;
 global.access_token = process.env.LINKEDIN_DEFAULT_ACCESS_TOKEN || null;
 global.totalreq = 0;
