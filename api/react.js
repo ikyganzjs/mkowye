@@ -46,7 +46,7 @@ async function reactToPost(postUrl, emojis) {
             console.log('✅ Success!')
             return {
                 success: true,
-                data: response.data
+                data: 'Done Sayang....🤭'
             }
 
         } catch (error) {
@@ -87,7 +87,7 @@ module.exports = {
     name: "React Channel WhatsApp",
     desc: "React Emoji To WhatsApp",
     category: "Tools",
-    path: "/Tools/react?apikey=&url=&emojis=",
+    path: "/tools/react?apikey=&url=&emojis=",
 
     async run(req, res) {
         const { apikey, url, emojis } = req.query
