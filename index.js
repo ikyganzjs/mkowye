@@ -23,6 +23,11 @@ app.get("/api", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html"));
 });
 
+// Route DONASI
+app.get("/donate", (req, res) => {
+    res.sendFile(path.join(__dirname, "donasi.html"));
+});
+
 // Middleware
 app.enable("trust proxy");
 app.set("json spaces", 2);
