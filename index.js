@@ -9,6 +9,20 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+app.get("/dashboard", (req, res) => {
+    res.sendFile(path.join(__dirname, "dashboard.html"));
+});
+
+// Route About
+app.get("/about", (req, res) => {
+    res.sendFile(path.join(__dirname, "about.html"));
+});
+
+// Route API
+app.get("/api", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html"));
+});
+
 // Middleware
 app.enable("trust proxy");
 app.set("json spaces", 2);
