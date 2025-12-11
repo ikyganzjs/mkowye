@@ -1,0 +1,178 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport"content="width=device-width,initial-scale=1.0"/><title id="pageTitle">API Docs</title><link rel="preconnect"href="https://fonts.googleapis.com"><link rel="preconnect"href="https://fonts.gstatic.com"crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"rel="stylesheet"><link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{--bg-light:#f5f6fa;--bg-dark:#0d1117;--glass-light:rgba(255,255,255,.55);--glass-dark:rgba(255,255,255,.06);--border-light:rgba(0,0,0,.08);--border-dark:rgba(255,255,255,.1);--text-dark:#222;--text-light:#e5e5e5;--primary:#3B82F6;--primary-glow:#60A5FA;--transition:.3s ease;}
+body{margin:0;padding:0;font-family:"Poppins",sans-serif;background:var(--bg-light);transition:var(--transition);}
+body.dark{background:var(--bg-dark);color:var(--text-light);}
+#loading-screen{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);z-index:9999;color:white;font-size:1.2rem;}
+.loader{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top:4px solid white;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+nav{width:100%;backdrop-filter:blur(12px);background:var(--glass-light);border-bottom:1px solid var(--border-light);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:50;}
+body.dark nav{background:var(--glass-dark);border-color:var(--border-dark);}
+.brand{display:flex;align-items:center;gap:10px;font-size:1.4rem;font-weight:600;}
+.logo{width:40px;height:40px;border-radius:50%;object-fit:cover;box-shadow:0 0 12px rgba(0,0,0,.15);}
+.container{max-width:1100px;margin:2rem auto;padding:0 1.2rem;}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin:20px 0;}
+.stat-box{flex:1;min-width:150px;padding:15px;border-radius:12px;background:var(--glass-light);backdrop-filter:blur(12px);border:1px solid var(--border-light);text-align:center;}
+body.dark .stat-box{background:var(--glass-dark);border-color:var(--border-dark);}
+.tabs{display:flex;gap:10px;overflow-x:auto;padding-bottom:1rem;}
+.tab{padding:8px 16px;border-radius:8px;border:1px solid transparent;font-weight:500;cursor:pointer;}
+.tab.active{background:var(--primary);color:white;border-color:var(--primary);}
+.api-list{margin-top:1.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.api-card{padding:1.2rem;border-radius:12px;background:var(--glass-light);backdrop-filter:blur(12px);border:1px solid var(--border-light);transition:.25s;}
+body.dark .api-card{background:var(--glass-dark);border-color:var(--border-dark);}
+.api-card:hover{transform:translateY(-3px);}
+.method{background:var(--primary);color:white;padding:3px 7px;border-radius:6px;font-size:.7rem;font-weight:600;}
+.play{margin-top:10px;background:var(--primary);color:white;border:none;padding:8px 14px;border-radius:8px;cursor:pointer;}
+#modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:1rem;}
+.modal-box{background:var(--glass-light);border:1px solid var(--border-light);border-radius:12px;padding:1.5rem;width:100%;max-width:500px;}
+body.dark .modal-box{background:var(--glass-dark);border-color:var(--border-dark);}
+input{width:100%;padding:.75rem;margin-bottom:.9rem;border-radius:10px;border:1px solid var(--border-light);}
+#response{margin-top:1rem;background:rgba(0,0,0,.07);padding:1rem;border-radius:8px;white-space:pre-wrap;max-height:280px;overflow:auto;}
+</style>
+</head>
+<body>
+
+<div id="loading-screen"><div class="loader"></div>Memuat...</div>
+
+<nav>
+  <div class="brand"><img id="logo" class="logo" src="https://i.ibb.co/C99c0bN/cloud-logo.png"> <span id="navName">REST API</span></div>
+  <div style="display:flex;align-items:center;gap:20px;"><div id="clock"></div><i id="themeToggle" class="fas fa-moon"style="cursor:pointer;"></i></div>
+</nav>
+
+<div class="container">
+  <h1 id="apiTitle"></h1>
+  <p style="opacity:.7">Dokumentasi REST API • Modern & Realtime UI</p>
+
+  <div class="stats">
+    <div class="stat-box">Kategori<br><b id="statCat">0</b></div>
+    <div class="stat-box">Endpoint<br><b id="statEnd">0</b></div>
+    <div class="stat-box">Status<br><b style="color:#4ade80">Online</b></div>
+    <div class="stat-box">Ping<br><b id="statPing">0ms</b></div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="api-list"id="apiList"></div>
+</div>
+
+<div id="modal">
+  <div class="modal-box">
+    <span style="float:right;font-size:1.8rem;cursor:pointer;"onclick="closeModal()">&times;</span>
+    <h3 id="mTitle"></h3><p id="mDesc"style="opacity:.7;margin-top:-5px;"></p>
+    <div id="paramBox"></div>
+    <button id="send"style="width:100%;padding:.8rem;background:var(--primary);color:white;border:none;border-radius:8px;display:none;">Kirim Respon</button>
+    <div id="response"></div>
+  </div>
+</div>
+
+<script>
+function clock(){document.getElementById("clock").innerHTML=new Date().toLocaleTimeString();}
+setInterval(clock,1e3);clock();
+
+const tg=document.getElementById("themeToggle");
+tg.onclick=()=>{document.body.classList.toggle("dark");tg.classList.toggle("fa-sun");};
+if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");}
+
+let settings={},apis={};
+
+async function load(){
+ try{
+   settings=await fetch("/set").then(r=>r.json());
+   apis=await fetch("/endpoints").then(r=>r.json());
+
+   document.getElementById("loading-screen").style.display="none";
+   document.getElementById("apiTitle").innerHTML=settings.apiTitle;
+   document.getElementById("navName").innerHTML=settings.apiTitle;
+   if(settings.logo)document.getElementById("logo").src=settings.logo;
+
+   let cats=Object.keys(apis);
+   document.getElementById("statCat").innerHTML=cats.length;
+   document.getElementById("statEnd").innerHTML=Object.values(apis).flat().length;
+
+   renderTabs(cats);
+   ping();
+ }catch(e){alert("Gagal memuat API");}
+}
+load();
+
+async function ping(){
+ let t=performance.now();
+ await fetch("/set");
+ let p=Math.round(performance.now()-t);
+ document.getElementById("statPing").innerHTML=p+"ms";
+}
+
+function renderTabs(c){
+ const t=document.getElementById("tabs");t.innerHTML="";
+ c.forEach((x,i)=>{
+  let el=document.createElement("div");
+  el.className="tab"+(i===0?" active":"");
+  el.innerHTML=x;
+  el.onclick=()=>select(x,el);
+  t.appendChild(el);
+ });
+ select(c[0]);
+}
+
+function select(cat,el){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ if(el)el.classList.add("active");
+ renderList(cat);
+}
+
+function renderList(cat){
+ const l=document.getElementById("apiList");l.innerHTML="";
+ apis[cat].forEach(api=>{
+  let c=document.createElement("div");c.className="api-card";
+  c.innerHTML=`<div class="method">GET</div><h3>${api.name}</h3><p style="opacity:.7">${api.desc||""}</p><button class="play">Coba <i class="fa fa-play"></i></button>`;
+  c.querySelector(".play").onclick=()=>openModal(api);
+  l.appendChild(c);
+ });
+}
+
+function openModal(api){
+ document.getElementById("modal").style.display="flex";
+ document.getElementById("mTitle").innerHTML=api.name;
+ document.getElementById("mDesc").innerHTML=api.desc||"";
+ let pb=document.getElementById("paramBox");pb.innerHTML="";
+ let send=document.getElementById("send");send.style.display="none";
+
+ if(api.path.includes("?")){
+  send.style.display="block";
+  api.path.split("?")[1].split("&").forEach(p=>{
+    let k=p.split("=")[0];
+    pb.innerHTML+=`<input id="p_${k}"placeholder="${k}"required/>`;
+  });
+  send.onclick=()=>req(api);
+ }else req(api);
+}
+
+function closeModal(){document.getElementById("modal").style.display="none";document.getElementById("response").innerHTML="";}
+
+async function req(api){
+ let p=api.path;
+ if(p.includes("?")){
+  let base=p.split("?")[0]+"?";
+  let arr=p.split("?")[1].split("&");
+  arr.forEach((a,i)=>{
+    let k=a.split("=")[0];
+    base+=k+"="+encodeURIComponent(document.getElementById("p_"+k).value)+(i<arr.length-1?"&":"");
+  });
+  p=base;
+ }
+ let url=location.origin+p;
+ let box=document.getElementById("response");
+ 
+ box.innerHTML="Loading...";
+
+ document.querySelector(".modal-box").scrollTo({top:9999,behavior:"smooth"}); 
+
+ try{
+  let r=await fetch(url);
+  let t=await r.text();
+  try{box.innerHTML=JSON.stringify(JSON.parse(t),null,2);}
+  catch{box.innerHTML=t;}
+ }catch(e){box.innerHTML="Error: "+e;}
+}
+</script>
+
+</body></html>
