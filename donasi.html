@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donation | IkyApi'S</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293bcc;
+            --bg-card-hover: #2d3748cc;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-lg: rgba(0, 0, 0, 0.5);
+            --border: #334155;
+            --footer-bg: #0d1117;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffffe6;
+            --bg-card-hover: #f8fafce6;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+            --success: #059669;
+            --warning: #d97706;
+            --warning-light: #f59e0b;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-lg: rgba(0, 0, 0, 0.1);
+            --border: #e2e8f0;
+            --footer-bg: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--accent-gradient);
+            padding: 100px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--warning-light);
+        }
+
+        .page-title {
+            margin-top: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px 0 60px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 20px var(--shadow);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: 0 15px 30px var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            color: var(--warning-light);
+            background: rgba(245, 158, 11, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--warning), var(--warning-light));
+            color: #000;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        /* Info Box */
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* QRIS Box */
+        .qris-box {
+            display: none;
+            text-align: center;
+            margin-top: 25px;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .transaction-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--warning);
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .qris-img {
+            max-width: 280px;
+            width: 100%;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .scan-guide {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: 12px;
+            border-left: 4px solid var(--warning);
+            text-align: left;
+        }
+
+        .guide-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--warning-light);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .guide-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guide-list li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .guide-list li:before {
+            content: "•";
+            color: var(--warning);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* History List */
+        .history-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding-right: 10px;
+            scroll-behavior: smooth;
+        }
+
+        .history-item {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .history-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+
+        .history-date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .history-brand {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            border-radius: 8px;
+            width: auto;
+        }
+
+        /* Loader */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 99999;
+            flex-direction: column;
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--warning-light);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-text {
+            margin-top: 15px;
+            color: var(--warning-light);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 18px 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--success);
+            color: var(--text-primary);
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+            font-size: 0.95rem;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--success);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 50px;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            
+            .theme-toggle, .back-button {
+                top: 15px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .back-button {
+                left: 15px;
+            }
+            
+            .theme-toggle {
+                right: 15px;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .transaction-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 70px 15px 40px;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .back-button span {
+                display: none;
+            }
+            
+            .back-button {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .history-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="/dashboard" class="back-button" aria-label="Back to Dashboard">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+        <span id="theme-text">Dark Mode</span>
+    </div>
+
+    <!-- Loader -->
+    <div id="loader">
+        <div class="loader-spinner"></div>
+        <p class="loader-text">Loading Donation Page...</p>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="logo">Iky<span>Api'S</span></div>
+            <div class="page-title">
+                <h1>Support Our Project</h1>
+                <p>Help keep our servers online and support continued development. Every contribution matters!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content container">
+        <div class="content-grid">
+            <!-- Payment Form -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h2 class="card-title">Create Payment</h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="nominal">Amount (min 1.000)</label>
+                    <input type="number" id="nominal" class="form-input" placeholder="Enter amount in IDR">
+                </div>
+
+                <!-- reCAPTCHA Info -->
+                <div class="info-box">
+                    <i class="fas fa-shield-alt info-icon"></i>
+                    <div class="info-text">Please complete the reCAPTCHA verification first to enable payment button</div>
+                </div>
+
+                <!-- reCAPTCHA -->
+                <div class="form-group">
+                    <div class="g-recaptcha"
+                        data-sitekey="6LeacicsAAAAAEScPaHuIG72-5FHtQ025h_vkNZJ"
+                        data-callback="recaptchaSuccess">
+                    </div>
+                </div>
+
+                <!-- Generate QRIS Button -->
+                <button id="btnQris" class="btn btn-primary" onclick="generateQRIS()" style="display: none;">
+                    <i class="fas fa-qrcode"></i> Generate QRIS
+                </button>
+
+                <!-- QRIS Box -->
+                <div id="qrisBox" class="qris-box">
+                    <div class="transaction-info">
+                        <div class="info-item">
+                            <div class="info-label">Transaction ID</div>
+                            <div class="info-value" id="trxId">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expires In</div>
+                            <div class="info-value" id="expired">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Admin Fee</div>
+                            <div class="info-value" id="adminFee">-</div>
+                        </div>
+                    </div>
+
+                    <img id="qrisImg" class="qris-img" alt="QRIS Code">
+
+                    <div class="scan-guide">
+                        <h3 class="guide-title"><i class="fas fa-mobile-alt"></i> How to Scan QRIS</h3>
+                        <ul class="guide-list">
+                            <li>Open your e-wallet app (DANA, OVO, Gopay, ShopeePay, etc.)</li>
+                            <li>Select "Scan" or "QR Scan" menu</li>
+                            <li>Point camera at the QRIS code above</li>
+                            <li>Verify the amount and click Pay</li>
+                            <li>After payment, click "Check Payment Status"</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="cekMutasi()" style="margin-top: 20px;">
+                        <i class="fas fa-sync-alt"></i> Check Payment Status
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment History -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h2 class="card-title">Payment History</h2>
+                </div>
+
+                <div id="riwayatList" class="history-list">
+                    Loading payment history...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">&copy; 2025 IkyApi'S. All rights reserved.</p>
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Secure Payment Processing</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (newTheme === 'dark') {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+            }
+            
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'dark');
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (theme === 'dark') {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+            }
+        }
+
+        // Callback reCAPTCHA - UNCHANGED
+        function recaptchaSuccess() {
+            document.getElementById("btnQris").style.display = "flex";
+        }
+
+        // Popup Notification - UPDATED for new design
+        function showPopup(message) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerHTML = `<i class="fas fa-check-circle" style="margin-right: 10px; color: var(--success);"></i> ${message}`;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                popup.style.transition = '0.3s';
+                setTimeout(() => popup.remove(), 300);
+            }, 3500);
+        }
+
+        // Load Payment History - UNCHANGED functionality
+        async function loadRiwayatAwal() {
+            let url = `https://ikyrestweb.vercel.app/orderkuota/mutasiqr?apikey=IkyRestApiPremium`;  
+            let res = await fetch(url);
+            let data = await res.json();
+
+            let list = document.getElementById("riwayatList");
+            list.innerHTML = "";
+
+            if (!data.status || data.result.length === 0) {
+                list.innerHTML = "<div class='history-item'>No transaction history yet</div>";
+                return;
+            }
+
+            data.result.forEach((item) => {
+                list.innerHTML += `
+                    <div class='history-item'>
+                        <div class='history-date'>${item.tanggal}</div>
+                        <div class='history-brand'>${item.brand.name}</div>
+                        <div class='history-actions'>
+                            <button onclick="downloadBukti('${item.tanggal}','${item.brand.name}')" class='btn btn-sm btn-primary'>
+                                <i class="fas fa-download"></i> Download Receipt
+                            </button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // Generate QRIS - UNCHANGED functionality
+        async function generateQRIS() {
+            let nominal = document.getElementById("nominal").value;
+            if (nominal < 1000) {
+                showPopup("Minimum amount is 1.000 IDR");
+                return;
+            }
+
+            let admin = Math.floor(Math.random() * 20) + 88;
+            let total = parseInt(nominal) + admin;
+
+            let token = grecaptcha.getResponse();
+            if (!token) {
+                showPopup("Please complete reCAPTCHA verification!");
+                return;
+            }
+
+            let url = `https://ikyrestweb.vercel.app/orderkuota/createpayment?apikey=IkyRestApiPremium&amount=${total}`;
+
+            try {
+                let res = await fetch(url);
+                let data = await res.json();
+
+                if (!data.status) {
+                    showPopup("Failed to generate QRIS");
+                    return;
+                }
+
+                let result = data.result;
+
+                document.getElementById("trxId").innerText = result.idtransaksi;
+                document.getElementById("expired").innerText = result.expired;
+                document.getElementById("qrisImg").src = result.imageqris.url;
+                document.getElementById("adminFee").innerText = admin + " IDR";
+
+                document.getElementById("qrisBox").style.display = "block";
+                showPopup("QRIS successfully generated ✔️");
+            } catch (error) {
+                showPopup("Network error, please try again");
+            }
+        }
+
+        // Check Payment - UNCHANGED functionality
+        async function cekMutasi() {
+            loadRiwayatAwal();
+            document.getElementById("qrisBox").style.display = "none";
+            showPopup("Payment history updated ✔️");
+        }
+
+        // Download Receipt - UNCHANGED functionality
+        function downloadBukti(tanggal, brand) {
+            let text = `Payment Receipt\nDate: ${tanggal}\nBrand: ${brand}\n\nThank you for supporting IkyApi'S!`;
+            let blob = new Blob([text], { type: 'text/plain' });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `receipt-${tanggal}.txt`;
+            link.click();
+            showPopup("Receipt downloaded successfully ✔️");
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTheme();
+            loadRiwayatAwal();
+            
+            // Auto-refresh history every 5 seconds
+            setInterval(loadRiwayatAwal, 5000);
+            
+            // Remove loader
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    document.getElementById('loader').style.opacity = '0';
+                    document.getElementById('loader').style.transition = '0.5s';
+                    setTimeout(() => document.getElementById('loader').remove(), 600);
+                }, 600);
+            });
+        });
+    </script>
+</body>
+</html>
