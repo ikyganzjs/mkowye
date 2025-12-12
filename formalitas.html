@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Sharing | IkyApi'S</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --bg-card-hover: #2d3748;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-light: #60a5fa;
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-lg: rgba(0, 0, 0, 0.5);
+            --border: #334155;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --accent: #2563eb;
+            --accent-light: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, #2563eb, #7c3aed);
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --shadow-lg: rgba(0, 0, 0, 0.1);
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--accent-gradient);
+            padding: 100px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1516116216624-53e697fedbea?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+            opacity: 0.1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #2ecc71;
+        }
+
+        .page-title {
+            margin-top: 20px;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* User Info */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 20px 0 60px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 2px dashed var(--border);
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        /* Code Cards Grid */
+        .code-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .code-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .code-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px var(--shadow-lg);
+            background: var(--bg-card-hover);
+        }
+
+        .card-header {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-type {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-description {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .code-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .code-preview pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--text-primary);
+        }
+
+        .code-language {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--accent);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.1);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        /* Add Button */
+        .add-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transition: var(--transition);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-button:hover {
+            background: var(--accent-light);
+            transform: scale(1.1);
+            box-shadow: 0 12px 25px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 25px 50px var(--shadow-lg);
+            border: 1px solid var(--border);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .close-modal:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            transition: var(--transition);
+            resize: vertical;
+            min-height: 150px;
+            line-height: 1.4;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1002;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            position: fixed;
+            top: 25px;
+            right: 180px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 12px var(--shadow);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            transition: var(--transition);
+            color: var(--text-primary);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px var(--shadow);
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 50px;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            
+            .theme-toggle, .back-button, .logout-btn {
+                top: 15px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .back-button {
+                left: 15px;
+            }
+            
+            .theme-toggle {
+                right: 15px;
+            }
+            
+            .logout-btn {
+                right: 120px;
+            }
+            
+            .code-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .back-button span {
+                display: none;
+            }
+            
+            .back-button {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
+            
+            .logout-btn span {
+                display: none;
+            }
+            
+            .logout-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero {
+                padding: 70px 15px 40px;
+            }
+            
+            .logo {
+                font-size: 1.8rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .logout-btn {
+                right: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="/dashboard" class="back-button" aria-label="Back to Dashboard">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Dashboard</span>
+    </a>
+
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="logout()" aria-label="Logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </button>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <i class="fas fa-moon" id="theme-icon"></i>
+        <span id="theme-text">Dark Mode</span>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="logo">Code<span>Share</span></div>
+            <div class="page-title">
+                <h1>Code Sharing Platform</h1>
+                <p>Share your code snippets, functions, and scripts. All code is saved locally in your browser.</p>
+                <div class="user-info" id="userInfo">
+                    <!-- User info will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content container">
+        <!-- Code Cards Grid -->
+        <div class="code-grid" id="codeGrid">
+            <!-- Code cards will be dynamically added here -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-icon">
+                <i class="fas fa-code"></i>
+            </div>
+            <h3>No Code Shared Yet</h3>
+            <p>Start sharing your code snippets, functions, or scripts by clicking the + button below.</p>
+            <button class="copy-btn" onclick="openAddModal()">
+                <i class="fas fa-plus"></i> Add Your First Code
+            </button>
+        </div>
+    </main>
+
+    <!-- Add Button -->
+    <button class="add-button" onclick="openAddModal()">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Add Code Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-code"></i> Share Code
+                </h2>
+                <button class="close-modal" onclick="closeAddModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="codeForm">
+                <div class="form-group">
+                    <label class="form-label" for="codeTitle">Title *</label>
+                    <input type="text" id="codeTitle" class="form-input" placeholder="Enter code title (e.g., 'Async Fetch Function')" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeType">Type *</label>
+                    <select id="codeType" class="form-select" required>
+                        <option value="">Select type</option>
+                        <option value="function">Function</option>
+                        <option value="snippet">Code Snippet</option>
+                        <option value="script">Script</option>
+                        <option value="module">Module</option>
+                        <option value="utility">Utility</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeLanguage">Language *</label>
+                    <select id="codeLanguage" class="form-select" required>
+                        <option value="javascript">JavaScript</option>
+                        <option value="python">Python</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="php">PHP</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeDescription">Description</label>
+                    <textarea id="codeDescription" class="form-input" placeholder="Describe what this code does..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="codeContent">Code Content *</label>
+                    <textarea id="codeContent" class="form-textarea" placeholder="Paste your code here..." required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Share Code
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (newTheme === 'dark') {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+            }
+            
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (systemPrefersDark ? 'dark' : 'dark');
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const themeIcon = document.getElementById('theme-icon');
+            const themeText = document.getElementById('theme-text');
+            
+            if (theme === 'dark') {
+                themeIcon.className = 'fas fa-moon';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                themeIcon.className = 'fas fa-sun';
+                themeText.textContent = 'Light Mode';
+            }
+        }
+
+        // Check if user is logged in
+        function checkLogin() {
+            const currentUser = localStorage.getItem('current_user');
+            if (!currentUser) {
+                // Redirect to login page if not logged in
+                window.location.href = '/login.html';
+                return null;
+            }
+            return JSON.parse(currentUser);
+        }
+
+        // Display user info
+        function displayUserInfo(user) {
+            const userInfo = document.getElementById('userInfo');
+            if (userInfo && user) {
+                userInfo.innerHTML = `
+                    <div class="user-avatar">${user.username.charAt(0).toUpperCase()}</div>
+                    <div>
+                        <strong>${user.username}</strong>
+                        <div style="font-size: 0.8rem;">${user.email || user.phone || 'No contact info'}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('current_user');
+            showToast('Logged out successfully!');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1000);
+        }
+
+        // Code Storage
+        let codes = [];
+
+        // Load codes from localStorage
+        function loadCodes() {
+            const savedCodes = localStorage.getItem('sharedCodes');
+            if (savedCodes) {
+                codes = JSON.parse(savedCodes);
+                renderCodes();
+            }
+        }
+
+        // Save codes to localStorage
+        function saveCodes() {
+            localStorage.setItem('sharedCodes', JSON.stringify(codes));
+        }
+
+        // Render all codes
+        function renderCodes() {
+            const codeGrid = document.getElementById('codeGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (!codeGrid || !emptyState) return;
+            
+            if (codes.length === 0) {
+                emptyState.style.display = 'block';
+                codeGrid.innerHTML = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            codeGrid.innerHTML = '';
+            
+            // Sort codes by date (newest first)
+            codes.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            codes.forEach((code, index) => {
+                const card = document.createElement('div');
+                card.className = 'code-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span class="card-type">${escapeHtml(code.type)}</span>
+                            ${escapeHtml(code.title)}
+                        </div>
+                        <div class="card-actions">
+                            <button class="action-btn" onclick="editCode(${index})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" onclick="deleteCode(${index})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        ${code.description ? `<p class="card-description">${escapeHtml(code.description)}</p>` : ''}
+                        <div class="code-preview">
+                            <div class="code-language">${escapeHtml(code.language)}</div>
+                            <pre>${escapeHtml(code.content.substring(0, 300))}${code.content.length > 300 ? '...' : ''}</pre>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-date">
+                            <i class="far fa-calendar"></i> ${formatDate(code.date)}
+                        </div>
+                        <button class="copy-btn" onclick="copyCode(${index})">
+                            <i class="fas fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                `;
+                codeGrid.appendChild(card);
+            });
+        }
+
+        // Add new code
+        function addCode(code) {
+            const user = checkLogin();
+            if (!user) return;
+            
+            codes.push({
+                ...code,
+                date: new Date().toISOString(),
+                id: Date.now(),
+                author: user.username
+            });
+            saveCodes();
+            renderCodes();
+            showToast('Code shared successfully!');
+        }
+
+        // Edit code
+        function editCode(index) {
+            if (index < 0 || index >= codes.length) return;
+            
+            const code = codes[index];
+            
+            // Populate form
+            document.getElementById('codeTitle').value = code.title;
+            document.getElementById('codeType').value = code.type;
+            document.getElementById('codeLanguage').value = code.language;
+            document.getElementById('codeDescription').value = code.description || '';
+            document.getElementById('codeContent').value = code.content;
+            
+            // Store editing index
+            document.getElementById('codeForm').dataset.editingIndex = index;
+            
+            openAddModal();
+        }
+
+        // Delete code
+        function deleteCode(index) {
+            if (index < 0 || index >= codes.length) return;
+            
+            if (confirm('Are you sure you want to delete this code?')) {
+                codes.splice(index, 1);
+                saveCodes();
+                renderCodes();
+                showToast('Code deleted successfully!');
+            }
+        }
+
+        // Copy code to clipboard
+        function copyCode(index) {
+            if (index < 0 || index >= codes.length) return;
+            
+            const code = codes[index];
+            navigator.clipboard.writeText(code.content)
+                .then(() => {
+                    showToast('Code copied to clipboard!');
+                })
+                .catch(err => {
+                    console.error('Failed to copy code: ', err);
+                    showToast('Failed to copy code', 'error');
+                });
+        }
+
+        // Modal Functions
+        function openAddModal() {
+            const modal = document.getElementById('addModal');
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeAddModal() {
+            const modal = document.getElementById('addModal');
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+                const form = document.getElementById('codeForm');
+                if (form) {
+                    form.reset();
+                    delete form.dataset.editingIndex;
+                }
+            }
+        }
+
+        // Form Submission
+        function initForm() {
+            const form = document.getElementById('codeForm');
+            if (!form) return;
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const editingIndex = this.dataset.editingIndex;
+                const codeData = {
+                    title: document.getElementById('codeTitle').value.trim(),
+                    type: document.getElementById('codeType').value,
+                    language: document.getElementById('codeLanguage').value,
+                    description: document.getElementById('codeDescription').value.trim(),
+                    content: document.getElementById('codeContent').value
+                };
+                
+                // Validation
+                if (!codeData.title || !codeData.type || !codeData.language || !codeData.content) {
+                    showToast('Please fill all required fields', 'error');
+                    return;
+                }
+                
+                if (editingIndex !== undefined && editingIndex !== '') {
+                    // Update existing code
+                    const index = parseInt(editingIndex);
+                    if (index >= 0 && index < codes.length) {
+                        codes[index] = {
+                            ...codeData,
+                            date: codes[index].date, // Keep original date
+                            id: codes[index].id, // Keep original ID
+                            author: codes[index].author // Keep original author
+                        };
+                        showToast('Code updated successfully!');
+                    }
+                } else {
+                    // Add new code
+                    addCode(codeData);
+                }
+                
+                saveCodes();
+                renderCodes();
+                closeAddModal();
+            });
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            
+            if (!toast || !toastMessage) return;
+            
+            toast.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Helper Functions
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'Unknown date';
+            }
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('addModal');
+                if (modal && modal.classList.contains('active')) {
+                    closeAddModal();
+                }
+            }
+        });
+
+        // Close modal on overlay click
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('addModal');
+            if (modal && e.target === modal) {
+                closeAddModal();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            
+            // Check login status
+            const user = checkLogin();
+            if (user) {
+                displayUserInfo(user);
+                loadCodes();
+                initForm();
+            }
+        });
+    </script>
+</body>
+</html>
