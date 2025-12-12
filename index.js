@@ -9,6 +9,21 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 4000;
 
+// Route Formalitas
+app.get("/forum", (req, res) => {
+    res.sendFile(path.join(__dirname, "formalitas.html"));
+});
+
+// Route Formalitas
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "login.html"));
+});
+
+// Route Register
+app.get("/register", (req, res) => {
+    res.sendFile(path.join(__dirname, "regis.html"));
+});
+
 app.get("/dashboard", (req, res) => {
     res.sendFile(path.join(__dirname, "dashboard.html"));
 });
