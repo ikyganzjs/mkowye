@@ -25,7 +25,7 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/dashboard", (req, res) => {
-    res.sendFile(path.join(__dirname, "dashboard.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // Route About
@@ -35,7 +35,7 @@ app.get("/about", (req, res) => {
 
 // Route API
 app.get("/api", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname, "dashboard.html"));
 });
 
 // Route DONASI
