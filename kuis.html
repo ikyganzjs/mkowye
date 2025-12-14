@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Kuis</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* {
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+}
+body {
+background:linear-gradient(135deg,#1a2a6c,#2c3e50);
+color:#fff;
+min-height:100vh;
+padding:20px;
+}
+.container {
+max-width:1200px;
+margin:0 auto;
+}
+.header-container {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+.back-btn {
+background-color:rgba(255,255,255,0.1);
+color:#fff;
+border:1px solid rgba(255,255,255,0.2);
+padding:10px 20px;
+border-radius:8px;
+font-size:1rem;
+cursor:pointer;
+transition:all 0.3s ease;
+display:flex;
+align-items:center;
+gap:8px;
+text-decoration:none;
+}
+.back-btn:hover {
+background-color:rgba(255,255,255,0.2);
+transform:translateY(-2px);
+}
+header {
+text-align:center;
+padding:20px 0;
+}
+h1 {
+font-size:2.8rem;
+margin-bottom:10px;
+text-shadow:0 2px 10px rgba(0,0,0,0.3);
+background:linear-gradient(90deg,#ff9a00,#ffcc00);
+-webkit-background-clip:text;
+background-clip:text;
+color:transparent;
+}
+.subtitle {
+font-size:1.2rem;
+opacity:0.8;
+margin-bottom:20px;
+}
+.game-container {
+display:flex;
+flex-wrap:wrap;
+gap:30px;
+margin-bottom:40px;
+}
+.categories {
+flex:1;
+min-width:300px;
+background-color:rgba(255,255,255,0.1);
+border-radius:15px;
+padding:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,0.1);
+}
+.game-area {
+flex:2;
+min-width:300px;
+background-color:rgba(255,255,255,0.1);
+border-radius:15px;
+padding:30px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
+backdrop-filter:blur(10px);
+border:1px solid rgba(255,255,255,0.1);
+display:flex;
+flex-direction:column;
+}
+h2 {
+font-size:1.8rem;
+margin-bottom:20px;
+color:#ffcc00;
+border-bottom:2px solid rgba(255,204,0,0.3);
+padding-bottom:10px;
+}
+.category-list {
+list-style:none;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
+gap:15px;
+}
+.category-item {
+background-color:rgba(255,255,255,0.08);
+border-radius:10px;
+padding:15px;
+text-align:center;
+cursor:pointer;
+transition:all 0.3s ease;
+border:1px solid rgba(255,255,255,0.05);
+}
+.category-item:hover {
+background-color:rgba(255,255,255,0.15);
+transform:translateY(-3px);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+}
+.category-item.active {
+background-color:rgba(255,153,0,0.25);
+border-color:#ff9900;
+box-shadow:0 5px 15px rgba(255,153,0,0.3);
+}
+.category-icon {
+font-size:2rem;
+margin-bottom:10px;
+color:#ffcc00;
+}
+.category-name {
+font-weight:600;
+font-size:0.95rem;
+}
+.question-container {
+flex-grow:1;
+display:flex;
+flex-direction:column;
+justify-content:center;
+}
+.question-header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+.category-tag {
+background-color:rgba(255,153,0,0.2);
+color:#ffcc00;
+padding:8px 15px;
+border-radius:20px;
+font-size:0.9rem;
+font-weight:600;
+}
+.question-number {
+background-color:rgba(0,0,0,0.3);
+padding:8px 15px;
+border-radius:20px;
+font-size:0.9rem;
+}
+.question-text {
+font-size:1.6rem;
+line-height:1.5;
+margin-bottom:30px;
+text-align:center;
+padding:20px;
+background-color:rgba(0,0,0,0.2);
+border-radius:10px;
+min-height:120px;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+.media-container {
+margin:20px 0;
+text-align:center;
+}
+.flag-image,.tebak-gambar {
+max-width:100%;
+max-height:200px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+}
+.audio-container {
+width:100%;
+margin:20px 0;
+}
+.answer-input-container {
+margin:25px 0;
+}
+.answer-input {
+width:100%;
+padding:18px 20px;
+font-size:1.2rem;
+border-radius:12px;
+border:2px solid rgba(255,255,255,0.1);
+background-color:rgba(255,255,255,0.08);
+color:white;
+transition:all 0.3s ease;
+}
+.answer-input:focus {
+outline:none;
+border-color:#ff9900;
+box-shadow:0 0 0 3px rgba(255,153,0,0.3);
+}
+.answer-input::placeholder {
+color:rgba(255,255,255,0.5);
+}
+.buttons {
+display:flex;
+gap:15px;
+margin-top:20px;
+}
+.btn {
+flex:1;
+padding:16px;
+border:none;
+border-radius:12px;
+font-size:1.1rem;
+font-weight:600;
+cursor:pointer;
+transition:all 0.3s ease;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+}
+.btn-submit {
+background-color:#ff9900;
+color:white;
+}
+.btn-submit:hover {
+background-color:#ffaa33;
+transform:translateY(-3px);
+box-shadow:0 5px 15px rgba(255,153,0,0.4);
+}
+.btn-next {
+background-color:#3498db;
+color:white;
+}
+.btn-next:hover {
+background-color:#5dade2;
+transform:translateY(-3px);
+box-shadow:0 5px 15px rgba(52,152,219,0.4);
+}
+.result-container {
+text-align:center;
+padding:20px;
+margin-top:20px;
+border-radius:10px;
+display:none;
+}
+.result-correct {
+background-color:rgba(46,204,113,0.2);
+border:2px solid #2ecc71;
+}
+.result-incorrect {
+background-color:rgba(231,76,60,0.2);
+border:2px solid #e74c3c;
+}
+.result-image {
+width:120px;
+height:120px;
+object-fit:contain;
+margin:15px auto;
+border-radius:10px;
+}
+.result-text {
+font-size:1.4rem;
+margin:10px 0;
+font-weight:600;
+}
+.correct-answer {
+font-size:1.2rem;
+margin:10px 0;
+}
+.description {
+font-style:italic;
+margin-top:10px;
+opacity:0.8;
+}
+.score-container {
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:30px;
+padding-top:20px;
+border-top:1px solid rgba(255,255,255,0.1);
+}
+.score-box {
+text-align:center;
+background-color:rgba(255,255,255,0.08);
+padding:15px 25px;
+border-radius:10px;
+min-width:150px;
+}
+.score-label {
+font-size:1rem;
+opacity:0.8;
+margin-bottom:5px;
+}
+.score-value {
+font-size:2.2rem;
+font-weight:700;
+color:#ffcc00;
+}
+.loading {
+text-align:center;
+padding:40px;
+font-size:1.2rem;
+}
+.spinner {
+border:4px solid rgba(255,255,255,0.1);
+border-left-color:#ff9900;
+border-radius:50%;
+width:40px;
+height:40px;
+animation:spin 1s linear infinite;
+margin:0 auto 20px;
+}
+@keyframes spin {
+to {transform:rotate(360deg);}
+}
+.instructions {
+background-color:rgba(255,255,255,0.05);
+border-radius:10px;
+padding:20px;
+margin-top:40px;
+}
+.instructions h3 {
+color:#ffcc00;
+margin-bottom:15px;
+}
+.instructions p {
+line-height:1.6;
+margin-bottom:10px;
+}
+footer {
+text-align:center;
+margin-top:40px;
+padding-top:20px;
+border-top:1px solid rgba(255,255,255,0.1);
+opacity:0.7;
+font-size:0.9rem;
+}
+@media (max-width:768px) {
+.game-container {
+flex-direction:column;
+}
+.category-list {
+grid-template-columns:repeat(auto-fill,minmax(120px,1fr));
+}
+h1 {
+font-size:2.2rem;
+}
+.question-text {
+font-size:1.3rem;
+min-height:100px;
+}
+.score-container {
+flex-direction:column;
+gap:15px;
+}
+.header-container {
+flex-direction:column;
+gap:15px;
+}
+.back-btn {
+align-self:flex-start;
+}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header-container">
+<a href="/dashboard" class="back-btn">
+<i class="fas fa-arrow-left"></i>
+Kembali ke Dashboard
+</a>
+<header>
+<h1><i class="fas fa-gamepad"></i>Game Kuis Interaktif</h1>
+<p class="subtitle">Uji pengetahuan Anda dengan berbagai kategori kuis menarik</p>
+</header>
+<div></div>
+</div>
+<div class="game-container">
+<div class="categories">
+<h2><i class="fas fa-list"></i>Kategori Kuis</h2>
+<ul class="category-list">
+<li class="category-item active" data-category="asahotak">
+<div class="category-icon"><i class="fas fa-brain"></i></div>
+<div class="category-name">Asah Otak</div>
+</li>
+<li class="category-item" data-category="caklontong">
+<div class="category-icon"><i class="fas fa-lightbulb"></i></div>
+<div class="category-name">Cak Lontong</div>
+</li>
+<li class="category-item" data-category="family100">
+<div class="category-icon"><i class="fas fa-users"></i></div>
+<div class="category-name">Family 100</div>
+</li>
+<li class="category-item" data-category="siapakahaku">
+<div class="category-icon"><i class="fas fa-user-circle"></i></div>
+<div class="category-name">Siapakah Aku?</div>
+</li>
+<li class="category-item" data-category="susunkata">
+<div class="category-icon"><i class="fas fa-sort-alpha-down"></i></div>
+<div class="category-name">Susun Kata</div>
+</li>
+<li class="category-item" data-category="tebakbendera">
+<div class="category-icon"><i class="fas fa-flag"></i></div>
+<div class="category-name">Tebak Bendera</div>
+</li>
+<li class="category-item" data-category="tebakgambar">
+<div class="category-icon"><i class="fas fa-image"></i></div>
+<div class="category-name">Tebak Gambar</div>
+</li>
+<li class="category-item" data-category="tebakkalimat">
+<div class="category-icon"><i class="fas fa-quote-right"></i></div>
+<div class="category-name">Tebak Kalimat</div>
+</li>
+<li class="category-item" data-category="tebakkata">
+<div class="category-icon"><i class="fas fa-font"></i></div>
+<div class="category-name">Tebak Kata</div>
+</li>
+<li class="category-item" data-category="tebakkimia">
+<div class="category-icon"><i class="fas fa-flask"></i></div>
+<div class="category-name">Tebak Kimia</div>
+</li>
+<li class="category-item" data-category="tebaklagu">
+<div class="category-icon"><i class="fas fa-music"></i></div>
+<div class="category-name">Tebak Lagu</div>
+</li>
+<li class="category-item" data-category="tebaklirik">
+<div class="category-icon"><i class="fas fa-microphone-alt"></i></div>
+<div class="category-name">Tebak Lirik</div>
+</li>
+<li class="category-item" data-category="tekateki">
+<div class="category-icon"><i class="fas fa-puzzle-piece"></i></div>
+<div class="category-name">Teka-Teki</div>
+</li>
+</ul>
+</div>
+<div class="game-area">
+<div class="question-header">
+<div class="category-tag" id="category-tag">Asah Otak</div>
+<div class="question-number" id="question-number">Pertanyaan #1</div>
+</div>
+<div class="question-container">
+<div class="loading" id="loading">
+<div class="spinner"></div>
+<p>Memuat pertanyaan...</p>
+</div>
+<div id="question-content" style="display:none">
+<div class="question-text" id="question-text">
+Golongan cendekiawan yang juga merupakan golongan karya atau warna dalam agama Hindu?
+</div>
+<div class="media-container" id="media-container"></div>
+<div class="answer-input-container">
+<input type="text" class="answer-input" id="answer-input" placeholder="Ketik jawaban Anda di sini...">
+</div>
+<div class="buttons">
+<button class="btn btn-submit" id="submit-btn">
+<i class="fas fa-paper-plane"></i>Kirim Jawaban
+</button>
+<button class="btn btn-next" id="next-btn" style="display:none">
+<i class="fas fa-forward"></i>Pertanyaan Berikutnya
+</button>
+</div>
+<div class="result-container" id="result-container">
+<img class="result-image" id="result-image" src="" alt="Hasil">
+<div class="result-text" id="result-text">Jawaban Anda Benar!</div>
+<div class="correct-answer" id="correct-answer">Jawaban: Brahmana</div>
+<div class="description" id="description"></div>
+</div>
+</div>
+</div>
+<div class="score-container">
+<div class="score-box">
+<div class="score-label">Skor</div>
+<div class="score-value" id="score-value">0</div>
+</div>
+<div class="score-box">
+<div class="score-label">Benar</div>
+<div class="score-value" id="correct-value">0</div>
+</div>
+<div class="score-box">
+<div class="score-label">Salah</div>
+<div class="score-value" id="incorrect-value">0</div>
+</div>
+</div>
+</div>
+</div>
+<div class="instructions">
+<h3><i class="fas fa-info-circle"></i>Cara Bermain</h3>
+<p>1.Pilih kategori kuis dari daftar di sebelah kiri</p>
+<p>2.Baca pertanyaan dengan seksama</p>
+<p>3.Untuk kategori tertentu,mungkin ada gambar atau audio yang perlu diperhatikan</p>
+<p>4.Ketik jawaban Anda di kotak teks dan klik "Kirim Jawaban"</p>
+<p>5.Untuk Family 100,masukkan semua jawaban yang dipisahkan dengan koma</p>
+<p>6.Dapatkan skor tertinggi dengan menjawab dengan benar!</p>
+</div>
+<footer>
+<p>Game Kuis Interaktif &copy; 2025 - Iky'S Api</p>
+</footer>
+</div>
+<script>
+const API_BASE_URL='https://api-cloudiky.vercel.app/';
+const API_KEY='IkyPrem';
+const CORRECT_IMAGE_URL='https://st.depositphotos.com/1001911/1554/v/450/depositphotos_15540341-stock-illustration-thumb-up-emoticon.jpg';
+const INCORRECT_IMAGE_URL='https://media.istockphoto.com/id/1400036056/id/vektor/emotikon-jempol-ke-bawah.jpg?s=612x612&w=0&k=20&c=cBhitRIl-x2yT9SGioA_MJYdsJkdc77XQv06um6C0-w=';
+let currentCategory='asahotak';
+let currentQuestion={};
+let score=0;
+let correctAnswers=0;
+let incorrectAnswers=0;
+let questionCount=0;
+const categoryItems=document.querySelectorAll('.category-item');
+const categoryTag=document.getElementById('category-tag');
+const questionNumber=document.getElementById('question-number');
+const loadingElement=document.getElementById('loading');
+const questionContent=document.getElementById('question-content');
+const questionText=document.getElementById('question-text');
+const mediaContainer=document.getElementById('media-container');
+const answerInput=document.getElementById('answer-input');
+const submitBtn=document.getElementById('submit-btn');
+const nextBtn=document.getElementById('next-btn');
+const resultContainer=document.getElementById('result-container');
+const resultImage=document.getElementById('result-image');
+const resultText=document.getElementById('result-text');
+const correctAnswerElement=document.getElementById('correct-answer');
+const descriptionElement=document.getElementById('description');
+const scoreValue=document.getElementById('score-value');
+const correctValue=document.getElementById('correct-value');
+const incorrectValue=document.getElementById('incorrect-value');
+const categoryNames={
+'asahotak':'Asah Otak',
+'caklontong':'Cak Lontong',
+'family100':'Family 100',
+'siapakahaku':'Siapakah Aku?',
+'susunkata':'Susun Kata',
+'tebakbendera':'Tebak Bendera',
+'tebakgambar':'Tebak Gambar',
+'tebakkalimat':'Tebak Kalimat',
+'tebakkata':'Tebak Kata',
+'tebakkimia':'Tebak Kimia',
+'tebaklagu':'Tebak Lagu',
+'tebaklirik':'Tebak Lirik',
+'tekateki':'Teka-Teki'
+};
+categoryItems.forEach(item=>{
+item.addEventListener('click',()=>{
+const category=item.getAttribute('data-category');
+selectCategory(category);
+});
+});
+submitBtn.addEventListener('click',submitAnswer);
+nextBtn.addEventListener('click',loadNewQuestion);
+answerInput.addEventListener('keypress',(e)=>{
+if(e.key==='Enter'){
+submitAnswer();
+}
+});
+function selectCategory(category){
+categoryItems.forEach(item=>{
+item.classList.remove('active');
+if(item.getAttribute('data-category')===category){
+item.classList.add('active');
+}
+});
+currentCategory=category;
+categoryTag.textContent=categoryNames[category];
+resetQuestionDisplay();
+loadNewQuestion();
+}
+async function loadNewQuestion(){
+loadingElement.style.display='block';
+questionContent.style.display='none';
+resultContainer.style.display='none';
+nextBtn.style.display='none';
+submitBtn.style.display='flex';
+answerInput.value='';
+answerInput.disabled=false;
+questionCount++;
+questionNumber.textContent=`Pertanyaan #${questionCount}`;
+try{
+const apiUrl=`${API_BASE_URL}${currentCategory}?apikey=${API_KEY}`;
+const response=await fetch(apiUrl);
+const data=await response.json();
+if(data.status){
+currentQuestion=data.result;
+displayQuestion();
+loadingElement.style.display='none';
+questionContent.style.display='block';
+}else{
+throw new Error('Gagal mengambil data dari API');
+}
+}catch(error){
+console.error('Error:',error);
+loadingElement.innerHTML=`<p>Error: Gagal memuat pertanyaan. Silakan coba lagi atau pilih kategori lain.</p>`;
+setTimeout(()=>{
+setDefaultQuestion();
+loadingElement.style.display='none';
+questionContent.style.display='block';
+},2000);
+}
+}
+function displayQuestion(){
+questionText.textContent=currentQuestion.soal||currentQuestion.jawaban||'';
+mediaContainer.innerHTML='';
+if(currentCategory==='tebakbendera'&&currentQuestion.img){
+const img=document.createElement('img');
+img.src=currentQuestion.img;
+img.alt='Bendera';
+img.className='flag-image';
+mediaContainer.appendChild(img);
+const hint=document.createElement('p');
+hint.textContent='Tebak nama negara dari bendera ini';
+hint.style.marginTop='10px';
+hint.style.opacity='0.8';
+mediaContainer.appendChild(hint);
+}else if(currentCategory==='tebakgambar'&&currentQuestion.img){
+const img=document.createElement('img');
+img.src=currentQuestion.img;
+img.alt='Gambar tebak-tebakan';
+img.className='tebak-gambar';
+mediaContainer.appendChild(img);
+}else if(currentCategory==='tebaklagu'&&currentQuestion.link_song){
+const audioContainer=document.createElement('div');
+audioContainer.className='audio-container';
+const audio=document.createElement('audio');
+audio.controls=true;
+audio.src=currentQuestion.link_song;
+audio.style.width='100%';
+const hint=document.createElement('p');
+hint.textContent='Dengarkan cuplikan lagu ini dan tebak judulnya';
+hint.style.marginTop='10px';
+hint.style.opacity='0.8';
+audioContainer.appendChild(audio);
+audioContainer.appendChild(hint);
+mediaContainer.appendChild(audioContainer);
+}else if(currentCategory==='susunkata'&&currentQuestion.soal){
+const lettersContainer=document.createElement('div');
+lettersContainer.style.textAlign='center';
+lettersContainer.style.margin='20px 0';
+const letters=currentQuestion.soal.split('-');
+letters.forEach(letter=>{
+const letterSpan=document.createElement('span');
+letterSpan.textContent=letter;
+letterSpan.style.display='inline-block';
+letterSpan.style.padding='10px 15px';
+letterSpan.style.margin='5px';
+letterSpan.style.backgroundColor='rgba(255,204,0,0.2)';
+letterSpan.style.borderRadius='5px';
+letterSpan.style.fontSize='1.5rem';
+letterSpan.style.fontWeight='bold';
+lettersContainer.appendChild(letterSpan);
+});
+const hint=document.createElement('p');
+hint.textContent=`Tipe: ${currentQuestion.tipe||'Umum'}`;
+hint.style.marginTop='10px';
+hint.style.opacity='0.8';
+mediaContainer.appendChild(lettersContainer);
+mediaContainer.appendChild(hint);
+}else if(currentCategory==='family100'&&Array.isArray(currentQuestion.jawaban)){
+const hint=document.createElement('p');
+hint.textContent=`Masukkan ${currentQuestion.jawaban.length} jawaban yang dipisahkan dengan koma (contoh: jawaban1, jawaban2, ...)`;
+hint.style.padding='15px';
+hint.style.backgroundColor='rgba(255,204,0,0.1)';
+hint.style.borderRadius='10px';
+hint.style.margin='10px 0';
+mediaContainer.appendChild(hint);
+}
+if(currentCategory==='family100'){
+answerInput.placeholder='Masukkan semua jawaban dipisahkan koma...';
+}else{
+answerInput.placeholder='Ketik jawaban Anda di sini...';
+}
+}
+function submitAnswer(){
+const userAnswer=answerInput.value.trim();
+if(!userAnswer){
+alert('Masukkan jawaban terlebih dahulu!');
+return;
+}
+answerInput.disabled=true;
+submitBtn.style.display='none';
+let isCorrect=false;
+let correctAnswer='';
+if(currentCategory==='family100'){
+const userAnswers=userAnswer.split(',').map(ans=>ans.trim().toLowerCase());
+const correctAnswersArray=currentQuestion.jawaban.map(ans=>ans.toLowerCase());
+let correctCount=0;
+userAnswers.forEach(ans=>{
+if(correctAnswersArray.includes(ans)){
+correctCount++;
+}
+});
+const requiredCorrect=Math.ceil(correctAnswersArray.length/2);
+isCorrect=correctCount>=requiredCorrect;
+correctAnswer=currentQuestion.jawaban.join(', ');
+}else{
+correctAnswer=currentQuestion.jawaban;
+isCorrect=userAnswer.toLowerCase()===correctAnswer.toString().toLowerCase();
+}
+showResult(isCorrect,correctAnswer);
+updateScore(isCorrect);
+}
+function showResult(isCorrect,correctAnswer){
+resultImage.src=isCorrect?CORRECT_IMAGE_URL:INCORRECT_IMAGE_URL;
+resultText.textContent=isCorrect?'Jawaban Anda Benar!':'Jawaban Anda Salah!';
+resultText.style.color=isCorrect?'#2ecc71':'#e74c3c';
+correctAnswerElement.textContent=`Jawaban: ${correctAnswer}`;
+if(currentQuestion.deskripsi){
+descriptionElement.textContent=currentQuestion.deskripsi;
+descriptionElement.style.display='block';
+}else{
+descriptionElement.style.display='none';
+}
+resultContainer.className='result-container '+(isCorrect?'result-correct':'result-incorrect');
+resultContainer.style.display='block';
+nextBtn.style.display='flex';
+}
+function updateScore(isCorrect){
+if(isCorrect){
+score+=10;
+correctAnswers++;
+}else{
+incorrectAnswers++;
+}
+scoreValue.textContent=score;
+correctValue.textContent=correctAnswers;
+incorrectValue.textContent=incorrectAnswers;
+}
+function resetQuestionDisplay(){
+resultContainer.style.display='none';
+nextBtn.style.display='none';
+submitBtn.style.display='flex';
+answerInput.value='';
+answerInput.disabled=false;
+}
+function setDefaultQuestion(){
+const defaultQuestions={
+'asahotak':{
+soal:'Golongan cendekiawan yang juga merupakan golongan karya atau warna dalam agama Hindu?',
+jawaban:'Brahmana'
+},
+'caklontong':{
+soal:'Dimana tempat lahir i gusti ngurah rai?',
+jawaban:'Bumi',
+deskripsi:'Indonesia masih di bumi kan?'
+},
+'family100':{
+soal:'Diva Remaja Dunia',
+jawaban:['britney spears','christina aguilera','shakira','jessica simpson']
+},
+'siapakahaku':{
+soal:'Aku adalah sebuah tempat. Aku penghubung antar kota. Aku tempat pemberhentian kereta api.',
+jawaban:'Stasiun'
+},
+'susunkata':{
+soal:'C-U-P-A-N-G',
+tipe:'Hewan',
+jawaban:'CAPUNG'
+},
+'tebakbendera':{
+img:'https://flagpedia.net/data/flags/w702/km.png',
+jawaban:'Comoros'
+},
+'tebakgambar':{
+img:'https://www.cademedia.com/wp-content/uploads/2020/12/tebak-gambar-level-20-nomor-6.jpg',
+jawaban:'ZEBRA LIAR',
+deskripsi:'Gambar zebra dengan corak tulisan ‘LIAR’ ditubuhnya.'
+},
+'tebakkalimat':{
+soal:'Jauh di  ... , dekat di hati',
+jawaban:'mata'
+},
+'tebakkata':{
+soal:'Mobil, Motor, Brisik, Bunyi',
+jawaban:'KLAKSON'
+},
+'tebakkimia':{
+soal:'Simbol dari Seng adalah?',
+jawaban:'Zn'
+},
+'tebaklagu':{
+link_song:'https://p.scdn.co/mp3-preview/5f583b2ce5aff7762b6611a85907d55349a62db1',
+jawaban:'Woman',
+artist:'Doja Cat'
+},
+'tebaklirik':{
+soal:'Apa yang salah dengan lagu ini, kenapa _____ ku mengingatmu, seperti aku bisa merasakan getaran jantung dan langkah kakimu',
+jawaban:'Kembali'
+},
+'tekateki':{
+soal:'Tari apa yang gerakannya tidak usah dipelajari?',
+jawaban:'Tarik nafas'
+}
+};
+currentQuestion=defaultQuestions[currentCategory]||defaultQuestions.asahotak;
+displayQuestion();
+}
+document.addEventListener('DOMContentLoaded',()=>{
+loadNewQuestion();
+});
+</script>
+</body>
+</html>
