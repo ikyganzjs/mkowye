@@ -14,6 +14,11 @@ app.get("/forum", (req, res) => {
     res.sendFile(path.join(__dirname, "formalitas.html"));
 });
 
+// Route Kuis
+app.get("/kuis", (req, res) => {
+    res.sendFile(path.join(__dirname, "kuis.html"));
+});
+
 // Route Formalitas
 app.get("/login", (req, res) => {
     res.sendFile(path.join(__dirname, "login.html"));
