@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dokumentasi API IkyApi'S</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <style>
+    :root {
+      /* Warna tema gelap */
+      --bg-primary: #0a0a0f;
+      --bg-secondary: #0f1117;
+      --bg-card: #11131d;
+      --bg-gradient: linear-gradient(135deg, #1a1b2e 0%, #0f1117 100%);
+      --text-primary: #ffffff;
+      --text-secondary: #b0b7d6;
+      --text-muted: #6b7299;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.3);
+      --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --border: rgba(255, 255, 255, 0.08);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --glow: 0 0 20px var(--accent-glow);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --radius: 20px;
+      --radius-sm: 12px;
+      
+      /* Warna tema terang */
+      --light-bg-primary: #f8fafc;
+      --light-bg-secondary: #ffffff;
+      --light-bg-card: #ffffff;
+      --light-text-primary: #1e293b;
+      --light-text-secondary: #475569;
+      --light-text-muted: #64748b;
+      --light-border: rgba(0, 0, 0, 0.08);
+      --light-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    [data-theme="light"] {
+      --bg-primary: var(--light-bg-primary);
+      --bg-secondary: var(--light-bg-secondary);
+      --bg-card: var(--light-bg-card);
+      --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #ffffff 100%);
+      --text-primary: var(--light-text-primary);
+      --text-secondary: var(--light-text-secondary);
+      --text-muted: var(--light-text-muted);
+      --accent: #4f46e5;
+      --accent-glow: rgba(79, 70, 229, 0.2);
+      --border: var(--light-border);
+      --shadow: var(--light-shadow);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Background 3D Modern */
+    #bg3d-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      opacity: 0.7;
+    }
+
+    .grid-bg {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background-image: 
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 40s linear infinite;
+      opacity: 0.15;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(60px, 60px); }
+    }
+
+    .floating-shape {
+      position: absolute;
+      border-radius: 20px;
+      background: var(--accent-gradient);
+      filter: blur(40px);
+      opacity: 0.1;
+      animation: floatShape 20s infinite ease-in-out;
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      top: 10%;
+      right: 10%;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 400px;
+      height: 400px;
+      bottom: 10%;
+      left: 10%;
+      animation-delay: 5s;
+    }
+
+    .shape-3 {
+      width: 200px;
+      height: 200px;
+      top: 50%;
+      right: 20%;
+      animation-delay: 10s;
+    }
+
+    @keyframes floatShape {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-spinner-large {
+      border: 4px solid var(--accent-glow);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+      color: var(--text-secondary);
+      margin-top: 1rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navbar */
+    .navbar {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+      background: var(--bg-card);
+      backdrop-filter: blur(10px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: var(--transition);
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-gradient);
+      border-radius: 2px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: var(--accent-gradient);
+      padding: 80px 0;
+      text-align: center;
+      border-radius: var(--radius);
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      box-shadow: var(--shadow-lg), var(--glow);
+    }
+
+    .page-title h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      color: white;
+      line-height: 1.1;
+    }
+
+    .page-title p {
+      font-size: 1.25rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: var(--transition);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-gradient);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
+    }
+
+    .stat-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      background: var(--accent-gradient);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: white;
+      font-size: 1.5rem;
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .online-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* API Key Card */
+    .api-key-card {
+      grid-column: 1 / -1;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      margin-top: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .api-key-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-gradient);
+    }
+
+    .api-key-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .api-key-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .api-key-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: 'Monaco', 'Courier New', monospace;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+
+    .copy-btn {
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1rem;
+      white-space: nowrap;
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Search Bar */
+    .search-container {
+      margin-bottom: 40px;
+    }
+
+    .search-box {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      font-size: 1.25rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 1.25rem 1.5rem 1.25rem 4rem;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: var(--glow);
+    }
+
+    /* API Categories */
+    .api-list-container {
+      margin-bottom: 60px;
+    }
+
+    .category-section {
+      margin-bottom: 40px;
+    }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .category-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .endpoint-count {
+      background: var(--accent-gradient);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* API Item */
+    .api-item {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .api-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-gradient);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .api-item:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
+    }
+
+    .api-item:hover::before {
+      transform: scaleX(1);
+    }
+
+    .api-item-header {
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+    }
+
+    .api-item-header.active {
+      border-bottom-color: var(--border);
+    }
+
+    .api-method {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .method-badge {
+      background: var(--accent-gradient);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      min-width: 80px;
+      text-align: center;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+
+    .api-path {
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 1rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .toggle-icon {
+      color: var(--text-secondary);
+      transition: transform 0.3s ease;
+      font-size: 1.25rem;
+    }
+
+    .api-item-header.active .toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .api-item-content {
+      padding: 2rem;
+      display: none;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .api-item-content.active {
+      display: block;
+    }
+
+    .api-description {
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      line-height: 1.8;
+      font-size: 1.125rem;
+      padding-left: 1rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    /* Try It Out Section */
+    .try-it-out {
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: var(--radius-sm);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(99, 102, 241, 0.1);
+    }
+
+    .try-it-out h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border-radius: var(--radius-sm);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: var(--transition);
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+
+    .api-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .execute-btn {
+      background: var(--accent-gradient);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    .execute-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px var(--accent-glow);
+    }
+
+    .execute-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .clear-btn {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 1rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .clear-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    /* Response Section */
+    .response-section {
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .response-section.active {
+      display: block;
+    }
+
+    .response-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .response-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .copy-response-btn {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copy-response-btn:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .copy-response-btn.copied {
+      background: var(--success);
+      color: white;
+      border-color: var(--success);
+    }
+
+    .response-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+
+    .response-tab {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      position: relative;
+      transition: var(--transition);
+      border-radius: var(--radius-sm);
+    }
+
+    .response-tab:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .response-tab.active {
+      color: var(--accent);
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .response-content {
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      max-height: 400px;
+      overflow-y: auto;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .response-content pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    /* Usage Chart */
+    .usage-chart-container {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 2rem;
+      border: 1px solid var(--border);
+      margin-bottom: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .usage-chart-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--accent-gradient);
+    }
+
+    .chart-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .chart-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chart-controls {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .chart-btn {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      font-size: 0.875rem;
+    }
+
+    .chart-btn.active {
+      background: var(--accent-gradient);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .chart-btn:hover:not(.active) {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .chart-wrapper {
+      height: 300px;
+      position: relative;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-card);
+      padding: 3rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .footer-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--accent-gradient);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      font-weight: 600;
+      box-shadow: 0 8px 20px var(--accent-glow);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle {
+      width: 50px;
+      height: 50px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-primary);
+      box-shadow: var(--shadow);
+    }
+
+    .theme-toggle:hover {
+      transform: rotate(30deg);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--accent);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 16px;
+      }
+      
+      .navbar {
+        padding: 16px 0;
+        flex-direction: column;
+        gap: 1.5rem;
+        text-align: center;
+      }
+      
+      .nav-links {
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .hero-section {
+        padding: 60px 16px;
+        margin: -16px -16px 2rem;
+        border-radius: 0;
+      }
+      
+      .page-title h1 {
+        font-size: 2.25rem;
+      }
+      
+      .page-title p {
+        font-size: 1.125rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+      
+      .stat-card {
+        padding: 24px;
+      }
+      
+      .api-key-card {
+        flex-direction: column;
+        text-align: left;
+        align-items: stretch;
+        gap: 1.5rem;
+      }
+      
+      .api-actions {
+        flex-direction: column;
+      }
+      
+      .execute-btn, .clear-btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .chart-wrapper {
+        height: 250px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .stat-value {
+        font-size: 2rem;
+      }
+      
+      .page-title h1 {
+        font-size: 1.75rem;
+      }
+      
+      .category-title {
+        font-size: 1.25rem;
+      }
+      
+      .api-item-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      
+      .api-status {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background 3D -->
+  <div id="bg3d-container">
+    <div class="grid-bg"></div>
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-spinner-large"></div>
+    <div class="loading-text">Memuat Dokumentasi API...</div>
+  </div>
+  
+  <!-- Navbar -->
+  <nav class="navbar container">
+    <a href="/" class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-bolt"></i>
+      </div>
+      IkyApi'S
+    </a>
+    
+    <div class="nav-links">
+      <a href="/" class="nav-link">Dashboard</a>
+      <a href="/api" class="nav-link active">Dokumentasi</a>
+      <a href="/forum" class="nav-link">Forum</a>
+      <a href="/about" class="nav-link">Tentang</a>
+    </div>
+    
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="logo-container">
+          <img id="logo" class="logo-img" src="https://pict.sindonews.net/dyn/850/pena/news/2023/04/23/700/1080177/9-karakter-cowok-rambut-putih-paling-ganteng-di-anime-qbe.jpg" alt="Logo IkyApi'S">
+        </div>
+        <div class="page-title">
+          <h1 id="apiTitleMain">Dokumentasi API IkyApi'S</h1>
+          <p>Dokumentasi lengkap untuk endpoint API IkyApi'S dengan contoh penggunaan dan pengujian langsung.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-layer-group"></i>
+        </div>
+        <div class="stat-value" id="statCat">0</div>
+        <div class="stat-label">Kategori API</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-code"></i>
+        </div>
+        <div class="stat-value" id="statEnd">0</div>
+        <div class="stat-label">Endpoint</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-signal"></i>
+        </div>
+        <div class="stat-value" id="statPing">0ms</div>
+        <div class="stat-label">Ping Server</div>
+        <div class="online-badge">
+          <i class="fas fa-circle"></i> Online
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-value" id="activeUsers">1.2k</div>
+        <div class="stat-label">Pengguna Aktif</div>
+      </div>
+
+      <!-- API Key Card -->
+      <div class="api-key-card">
+        <div class="api-key-info">
+          <div class="api-key-label">Kunci API Anda</div>
+          <div class="api-key-value" id="apiKeyValue">IkyPrem</div>
+        </div>
+        <button class="copy-btn" onclick="copyApiKey()">
+          <i class="fas fa-copy"></i> Salin Kunci
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-container">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="apiSearch" placeholder="Cari endpoint API...">
+      </div>
+    </div>
+
+    <!-- API Categories and Endpoints -->
+    <div id="api-list-container" class="api-list-container"></div>
+
+    <!-- Usage Chart -->
+    <div class="usage-chart-container">
+      <div class="chart-header">
+        <h2 class="chart-title">
+          <i class="fas fa-chart-line"></i> Statistik Penggunaan API
+        </h2>
+        <div class="chart-controls">
+          <button class="chart-btn active" onclick="changeChartView('day')">Hari Ini</button>
+          <button class="chart-btn" onclick="changeChartView('week')">Minggu Ini</button>
+          <button class="chart-btn" onclick="changeChartView('month')">Bulan Ini</button>
+        </div>
+      </div>
+      <div class="chart-wrapper">
+        <canvas id="usageChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <p class="footer-text">&copy; 2025 IkyApi'S. Hak cipta dilindungi.</p>
+        <div class="security-badge">
+          <i class="fas fa-lock"></i>
+          <span>Akses API Aman & Terenkripsi</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script tetap sama seperti sebelumnya -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        // ====================
+        // DARK MODE LOGIC
+        // ====================
+        const themeToggle = document.querySelector('.theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+
+        const applyTheme = (isDark) => {
+            const html = document.documentElement;
+            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            
+            if (isDark) {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        };
+
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme !== null) {
+            applyTheme(storedTheme === 'dark');
+        } else {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            applyTheme(prefersDark);
+        }
+        
+        themeToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const newTheme = !isDark;
+            applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+            updateChartTheme();
+        });
+
+        // ====================
+        // PERFORMANCE OPTIMIZATION
+        // ====================
+        let isInitialLoad = true;
+        const LOADING_MIN_TIME = 800;
+        document.querySelector('.container').style.display = 'none';
+
+        const apiListContainer = document.getElementById("api-list-container");
+        const searchInput = document.getElementById("apiSearch");
+
+        let settings = {}, apis = {};
+        let OpeningApi = "Orderkuota";
+        let userApiKey = "IkyPrem";
+
+        // Chart Variables
+        let usageChart;
+        let chartView = 'day';
+        let searchTimeout;
+
+        // ====================
+        // DEBOUNCE FUNCTION
+        // ====================
+        const debounce = (func, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+
+        // ====================
+        // LOAD API DATA
+        // ====================
+        try {
+            const [settingsRes, apisRes] = await Promise.all([
+                fetch("/set"),
+                fetch("/endpoints")
+            ]);
+            settings = await settingsRes.json();
+            apis = await apisRes.json();
+        } catch (err) {
+            console.error("Failed to load API configuration:", err);
+            const loadingScreen = document.getElementById('loading-screen');
+            loadingScreen.innerHTML = `
+                <div style="color:#ef4444; font-size:1rem; font-weight:500; text-align:center; padding:2rem;">
+                    Error: Gagal memuat data API. Pastikan server berjalan dengan baik.
+                </div>
+            `;
+            return;
+        }
+
+        // ====================
+        // SET PAGE CONTENT
+        // ====================
+        const setContent = (id, prop, val) => {
+            const el = document.getElementById(id);
+            if (el) el[prop] = val;
+        };
+
+        setContent("page", "textContent", "Dokumentasi - " + (settings.apiTitle || "Iky API"));
+        setContent("apiTitleMain", "textContent", settings.apiTitle || "Dokumentasi API IkyApi'S");
+        
+        if (settings.logo) {
+          document.getElementById("logo").src = settings.logo;
+        }
+
+        // ====================
+        // UPDATE STATISTICS
+        // ====================
+        const categories = Object.keys(apis);    
+        document.getElementById("statCat").textContent = categories.length;
+        document.getElementById("statEnd").textContent = Object.values(apis).flat().length;
+        
+        // Initialize chart
+        initUsageChart();
+
+        // Initial ping
+        ping();
+
+        // Reorder categories if OpeningApi exists
+        if (categories.includes(OpeningApi)) {
+          let indx = categories.indexOf(OpeningApi);
+          categories.splice(indx, 1);
+          categories.unshift(OpeningApi);
+        } else {
+          OpeningApi = null;
+        }
+
+        // ====================
+        // HELPER FUNCTIONS
+        // ====================
+        function extractParams(endpoint) {
+            const params = [];
+            if (endpoint.includes('?')) {
+                const queryString = endpoint.split('?')[1];
+                const paramPairs = queryString.split('&');
+                paramPairs.forEach(pair => {
+                    const [key, value] = pair.split('=');
+                    if (value === '' || value === '&') {
+                        params.push(key);
+                    }
+                });
+            }
+            return params;
+        }
+
+        function getParamLabel(param) {
+            const labels = {
+                'apikey': 'Kunci API *',
+                'id': 'ID *',
+                'q': 'Pencarian *',
+                'username': 'Username *',
+                'uid': 'ID Pengguna *',
+                'zid': 'ID Zona *',
+                'text': 'Teks *',
+                'query': 'Kueri *',
+                'search': 'Cari *'
+            };
+            return labels[param] || param.charAt(0).toUpperCase() + param.slice(1) + ' *';
+        }
+
+        // ====================
+        // COPY RESPONSE FUNCTION
+        // ====================
+        function copyResponseContent(contentElement, buttonElement) {
+            const content = contentElement.textContent || contentElement.innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const originalText = buttonElement.innerHTML;
+                buttonElement.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                buttonElement.classList.add('copied');
+                
+                setTimeout(() => {
+                    buttonElement.innerHTML = originalText;
+                    buttonElement.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                buttonElement.innerHTML = '<i class="fas fa-times"></i> Error';
+                setTimeout(() => {
+                    buttonElement.innerHTML = '<i class="fas fa-copy"></i> Salin';
+                }, 2000);
+            });
+        }
+
+        // ====================
+        // RENDER API ENDPOINTS
+        // ====================
+        function renderAPIs(filter = '') {
+            apiListContainer.innerHTML = '';
+            
+            if (categories.length === 0) {
+                apiListContainer.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-secondary);">Tidak ada kategori API yang ditemukan.</div>';
+                return;
+            }
+
+            categories.forEach((category) => {
+                if (!apis[category]) return;
+                
+                const filteredEndpoints = apis[category].filter(api => 
+                    api.name.toLowerCase().includes(filter.toLowerCase()) || 
+                    api.path.toLowerCase().includes(filter.toLowerCase()) ||
+                    (api.desc && api.desc.toLowerCase().includes(filter.toLowerCase()))
+                );
+                
+                if (filteredEndpoints.length === 0 && filter !== '') return;
+
+                const categorySection = document.createElement("div");
+                categorySection.className = "category-section";
+                
+                categorySection.innerHTML = `
+                    <div class="category-header">
+                        <h3 class="category-title">
+                            <div class="category-icon">
+                                <i class="fas fa-folder"></i>
+                            </div>
+                            ${category} <span class="endpoint-count">${filteredEndpoints.length}</span>
+                        </h3>
+                    </div>
+                `;
+
+                const endpointsList = document.createElement("div");
+                
+                filteredEndpoints.sort((a, b) => a.name.localeCompare(b.name)).forEach((api, i) => {
+                    const endpointId = `endpoint-${category}-${i}`;
+                    const params = extractParams(api.path);
+                    
+                    let formInputs = '';
+                    params.forEach(param => {
+                        if (param === 'apikey') {
+                            formInputs += `
+                                <div class="input-group">
+                                    <label for="${endpointId}-${param}">${getParamLabel(param)}</label>
+                                    <input type="text" 
+                                           id="${endpointId}-${param}" 
+                                           placeholder="Masukkan kunci API Anda"
+                                           value="${userApiKey}"
+                                           class="api-key-input">
+                                </div>
+                            `;
+                        } else {
+                            formInputs += `
+                                <div class="input-group">
+                                    <label for="${endpointId}-${param}">${getParamLabel(param)}</label>
+                                    <input type="text" 
+                                           id="${endpointId}-${param}" 
+                                           placeholder="Masukkan ${param}"
+                                           class="api-param-input">
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    const apiItem = document.createElement("div");
+                    apiItem.className = "api-item";
+                    apiItem.innerHTML = `
+                        <div class="api-item-header" data-id="${endpointId}">
+                            <div class="api-method">
+                                <span class="method-badge">GET</span>
+                                <span class="api-path">${api.path}</span>
+                            </div>
+                            <div class="api-status">
+                                <span class="status-badge">Siap</span>
+                                <i class="fas fa-chevron-down toggle-icon"></i>
+                            </div>
+                        </div>
+                        <div class="api-item-content" id="${endpointId}">
+                            <div class="api-description">
+                                ${api.desc || 'Tidak ada deskripsi tersedia.'}
+                            </div>
+                            <div class="try-it-out">
+                                <h4><i class="fas fa-play-circle"></i> COBA SEKARANG</h4>
+                                ${formInputs}
+                                <div class="api-actions">
+                                    <button class="execute-btn" data-endpoint="${api.path}" data-id="${endpointId}">
+                                        <i class="fas fa-play"></i> Eksekusi
+                                    </button>
+                                    <button class="clear-btn" onclick="clearResponse('${endpointId}')">
+                                        Bersihkan
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="response-section" id="${endpointId}-response">
+                                <div class="response-header">
+                                    <div class="response-title">Respons</div>
+                                    <button class="copy-response-btn" data-copy-target="${endpointId}-response-content">
+                                        <i class="fas fa-copy"></i> Salin
+                                    </button>
+                                </div>
+                                <div class="response-tabs">
+                                    <button class="response-tab active" data-tab="response" data-id="${endpointId}">RESPONS</button>
+                                    <button class="response-tab" data-tab="curl" data-id="${endpointId}">CURL</button>
+                                    <button class="response-tab" data-tab="url" data-id="${endpointId}">URL Permintaan</button>
+                                </div>
+                                <div class="response-content" id="${endpointId}-response-content">
+                                    <!-- Response akan ditampilkan di sini -->
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    endpointsList.appendChild(apiItem);
+                });
+                
+                categorySection.appendChild(endpointsList);
+                apiListContainer.appendChild(categorySection);
+            });
+
+            // ====================
+            // EVENT LISTENERS
+            // ====================
+            
+            // Toggle endpoints
+            document.querySelectorAll('.api-item-header').forEach(header => {
+                header.addEventListener('click', (e) => {
+                    if (e.target.closest('.execute-btn') || e.target.closest('.clear-btn') || e.target.closest('.copy-response-btn')) return;
+                    
+                    const contentId = header.getAttribute('data-id');
+                    const content = document.getElementById(contentId);
+                    const isActive = content.classList.contains('active');
+                    
+                    // Close all other open endpoints
+                    document.querySelectorAll('.api-item-content.active').forEach(item => {
+                        item.classList.remove('active');
+                        item.previousElementSibling.classList.remove('active');
+                    });
+                    
+                    if (!isActive) {
+                        content.classList.add('active');
+                        header.classList.add('active');
+                    }
+                });
+            });
+
+            // Copy response button
+            document.querySelectorAll('.copy-response-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const targetId = btn.getAttribute('data-copy-target');
+                    const contentElement = document.getElementById(targetId);
+                    copyResponseContent(contentElement, btn);
+                });
+            });
+
+            // Execute API calls
+            document.querySelectorAll('.execute-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    const endpoint = btn.getAttribute('data-endpoint');
+                    const endpointId = btn.getAttribute('data-id');
+                    const apiItem = btn.closest('.api-item');
+                    const responseSection = apiItem.querySelector('.response-section');
+                    const responseContent = apiItem.querySelector('.response-content');
+                    
+                    const inputs = apiItem.querySelectorAll('input');
+                    const params = {};
+                    let hasEmptyFields = false;
+                    
+                    inputs.forEach(input => {
+                        const value = input.value.trim();
+                        const paramName = input.id.replace(`${endpointId}-`, '');
+                        params[paramName] = value;
+                        
+                        if (!value) {
+                            hasEmptyFields = true;
+                            input.style.borderColor = 'var(--error)';
+                        } else {
+                            input.style.borderColor = '';
+                        }
+                    });
+                    
+                    if (hasEmptyFields) {
+                        alert('Harap isi semua field yang diperlukan');
+                        return;
+                    }
+                    
+                    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengeksekusi...';
+                    btn.disabled = true;
+                    
+                    try {
+                        const baseUrl = endpoint.split('?')[0];
+                        const queryParams = new URLSearchParams();
+                        
+                        Object.keys(params).forEach(key => {
+                            queryParams.append(key, params[key]);
+                        });
+                        
+                        const fullUrl = window.location.origin + baseUrl + '?' + queryParams.toString();
+                        
+                        responseSection.classList.add('active');
+                        
+                        const urlTab = apiItem.querySelector('[data-tab="url"]');
+                        urlTab.click();
+                        responseContent.innerHTML = `<pre>${fullUrl}</pre>`;
+                        
+                        const response = await fetch(fullUrl);
+                        const contentType = response.headers.get("content-type");
+                        
+                        if (contentType && contentType.includes("application/json")) {
+                            const data = await response.json();
+                            responseContent.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                        } else {
+                            const text = await response.text();
+                            responseContent.innerHTML = `<pre>${text.substring(0, 1000)}</pre>`;
+                        }
+                        
+                        apiItem.querySelector('[data-tab="response"]').click();
+                        
+                    } catch (error) {
+                        responseContent.innerHTML = `<pre>Error: ${error.message}</pre>`;
+                    } finally {
+                        btn.innerHTML = '<i class="fas fa-play"></i> Eksekusi';
+                        btn.disabled = false;
+                    }
+                });
+            });
+
+            // Response tabs
+            document.querySelectorAll('.response-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    const tabType = tab.getAttribute('data-tab');
+                    const endpointId = tab.getAttribute('data-id');
+                    const apiItem = document.getElementById(endpointId).closest('.api-item');
+                    const responseContent = apiItem.querySelector('.response-content');
+                    const inputs = apiItem.querySelectorAll('input');
+                    
+                    apiItem.querySelectorAll('.response-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const params = {};
+                    inputs.forEach(input => {
+                        const paramName = input.id.replace(`${endpointId}-`, '');
+                        params[paramName] = input.value.trim();
+                    });
+                    
+                    const endpoint = apiItem.querySelector('.execute-btn').getAttribute('data-endpoint');
+                    const baseUrl = endpoint.split('?')[0];
+                    const queryParams = new URLSearchParams();
+                    
+                    Object.keys(params).forEach(key => {
+                        queryParams.append(key, params[key]);
+                    });
+                    
+                    const fullUrl = window.location.origin + baseUrl + '?' + queryParams.toString();
+                    
+                    switch(tabType) {
+                        case 'response':
+                            // Content already displayed from execute
+                            break;
+                        case 'curl':
+                            responseContent.innerHTML = `<pre>curl -X GET "${fullUrl}"</pre>`;
+                            break;
+                        case 'url':
+                            responseContent.innerHTML = `<pre>${fullUrl}</pre>`;
+                            break;
+                    }
+                });
+            });
+
+            // Sync API key across inputs
+            document.querySelectorAll('.api-key-input').forEach(input => {
+                input.addEventListener('input', (e) => {
+                    userApiKey = e.target.value;
+                    document.querySelectorAll('.api-key-input').forEach(otherInput => {
+                        if (otherInput !== e.target) {
+                            otherInput.value = userApiKey;
+                        }
+                    });
+                    document.getElementById('apiKeyValue').textContent = userApiKey;
+                });
+            });
+        }
+
+        // Initial render
+        renderAPIs();
+
+        // Search with debounce
+        searchInput.addEventListener('input', debounce((e) => {
+            renderAPIs(e.target.value);
+        }, 300));
+
+        // ====================
+        // UTILITY FUNCTIONS
+        // ====================
+        
+        // Copy API Key
+        window.copyApiKey = function() {
+            const apiKey = document.getElementById('apiKeyValue').textContent;
+            navigator.clipboard.writeText(apiKey).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check"></i> Tersalin!';
+                btn.style.background = 'var(--success)';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            });
+        };
+
+        // Clear response
+        window.clearResponse = function(endpointId) {
+            const apiItem = document.getElementById(endpointId).closest('.api-item');
+            const inputs = apiItem.querySelectorAll('input:not(.api-key-input)');
+            const responseSection = apiItem.querySelector('.response-section');
+            const responseContent = apiItem.querySelector('.response-content');
+            
+            inputs.forEach(input => {
+                input.value = '';
+                input.style.borderColor = '';
+            });
+            
+            responseSection.classList.remove('active');
+            responseContent.innerHTML = '';
+        };
+
+        // ====================
+        // CHART FUNCTIONS
+        // ====================
+        function initUsageChart() {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            
+            const data = {
+                day: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
+                    values: [45, 78, 120, 210, 185, 95, 60]
+                },
+                week: {
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    values: [850, 920, 1100, 1250, 980, 750, 680]
+                },
+                month: {
+                    labels: ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'],
+                    values: [3800, 4200, 5100, 3900]
+                }
+            };
+
+            const currentData = data[chartView];
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const gridColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+            const textColor = isDark ? 'var(--text-secondary)' : 'var(--light-text-muted)';
+
+            if (usageChart) {
+                usageChart.destroy();
+            }
+
+            usageChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: currentData.labels,
+                    datasets: [{
+                        label: 'Permintaan API',
+                        data: currentData.values,
+                        borderColor: isDark ? '#60a5fa' : 'var(--accent)',
+                        backgroundColor: isDark ? 'rgba(96, 165, 250, 0.1)' : 'rgba(99, 102, 241, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: isDark ? '#60a5fa' : 'var(--accent)',
+                        pointBorderColor: isDark ? '#1e293b' : '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? 'var(--bg-card)' : '#ffffff',
+                            titleColor: textColor,
+                            bodyColor: textColor,
+                            borderColor: isDark ? 'var(--accent)' : 'var(--accent)',
+                            borderWidth: 1,
+                            padding: 12,
+                            boxPadding: 4
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: gridColor,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: textColor,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: gridColor,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: textColor,
+                                font: {
+                                    family: 'Inter',
+                                    size: 12
+                                },
+                                callback: function(value) {
+                                    return value >= 1000 ? (value/1000).toFixed(1) + 'k' : value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChartTheme() {
+            if (usageChart) {
+                usageChart.destroy();
+                initUsageChart();
+            }
+        }
+
+        function changeChartView(view) {
+            chartView = view;
+            
+            document.querySelectorAll('.chart-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(view)) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            initUsageChart();
+        }
+
+        // ====================
+        // PING FUNCTION
+        // ====================
+        async function ping() {
+            let t = performance.now();
+            try {
+                await fetch("/set");
+                let ms = Math.round(performance.now() - t);
+                document.getElementById("statPing").textContent = ms + "ms";
+            } catch {
+                document.getElementById("statPing").textContent = "Error";
+            }
+        }
+
+        // Ping every 30 seconds
+        setInterval(ping, 30000);
+
+        // ====================
+        // LOADING SCREEN FADE OUT
+        // ====================
+        const hideLoadingScreen = () => {
+            const loadingScreen = document.getElementById('loading-screen');
+            const minDisplayTime = isInitialLoad ? LOADING_MIN_TIME : 300;
+            const elapsed = performance.now() - window.loadStartTime;
+            const remaining = Math.max(0, minDisplayTime - elapsed);
+            
+            setTimeout(() => {
+                loadingScreen.style.opacity = '0';
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    document.querySelector('.container').style.display = 'block';
+                    isInitialLoad = false;
+                }, 300);
+            }, remaining);
+        };
+
+        window.loadStartTime = performance.now();
+        hideLoadingScreen();
+        
+      } catch (e) {
+        console.error(e);
+        document.getElementById('loading-screen').innerHTML = `
+          <div style="color:#ef4444; font-size:1rem; font-weight:500; text-align:center; padding:2rem;">
+            Error: ${e.message}
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
