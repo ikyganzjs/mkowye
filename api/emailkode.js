@@ -228,7 +228,7 @@ module.exports = {
     
     async run(req, res) {
         try {
-            const { apikey, email, otp } = req.query;
+            const { apikey, email } = req.query;
             
             // Validasi apikey
             if (!apikey || !global.apikey.includes(apikey)) {
@@ -315,4 +315,5 @@ module.exports = {
             });
         }
     }
+
 };
