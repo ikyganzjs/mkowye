@@ -224,11 +224,11 @@ module.exports = {
     name: "Gmail Kode",
     desc: "Gunakan untuk daftar via gmail",
     category: "Tools",
-    path: "/tools/gmailkode?apikey=&email=&otp=",
+    path: "/tools/gmailkode?apikey=&email=",
     
     async run(req, res) {
         try {
-            const { apikey, email } = req.query;
+            const { apikey, email, otp } = req.query;
             
             // Validasi apikey
             if (!apikey || !global.apikey.includes(apikey)) {
@@ -317,3 +317,4 @@ module.exports = {
     }
 
 };
+
