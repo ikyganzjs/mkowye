@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Donasi | IkyApi'S - Dukung Pengembangan</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js untuk Background 3D -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+            }
+        }
+    </script>
+    
+    <!-- reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0f1117;
+            --bg-card: rgba(17, 19, 29, 0.75);
+            --bg-card-solid: #11131f;
+            --bg-gradient: radial-gradient(circle at 30% 20%, rgba(26,27,46,0.95) 0%, #05050c 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #b0b7d6;
+            --text-muted: #6b7299;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --warning-light: #fbbf24;
+            --error: #ef4444;
+            --border: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            --glow: 0 0 20px rgba(99, 102, 241, 0.3);
+            --transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            --radius: 28px;
+            --radius-sm: 16px;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5fe;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --bg-card-solid: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent: #4f46e5;
+            --accent-glow: rgba(79, 70, 229, 0.25);
+            --border: rgba(0, 0, 0, 0.08);
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --bg-gradient: radial-gradient(circle at 30% 20%, #eef2ff 0%, #ffffff 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Canvas 3D Background */
+        #canvas-3d-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            display: block;
+        }
+
+        /* Ambient Overlay */
+        .ambient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 70% 30%, rgba(0,0,0,0) 40%, var(--bg-primary) 100%);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.65;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 28px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Glass Navbar */
+        .navbar {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 30px;
+            backdrop-filter: blur(16px);
+            background: rgba(0,0,0,0.2);
+            border-radius: 0 0 32px 32px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--accent-gradient);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: var(--glow);
+            transition: transform 0.3s;
+        }
+
+        .logo-icon:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--accent);
+            text-shadow: 0 0 6px var(--accent-glow);
+        }
+
+        .nav-link.active {
+            color: var(--accent);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-gradient);
+            border-radius: 4px;
+        }
+
+        /* Theme Toggle 3D */
+        .theme-toggle {
+            position: fixed;
+            top: 28px;
+            right: 28px;
+            width: 52px;
+            height: 52px;
+            background: var(--bg-card-solid);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(30deg) scale(1.08);
+            box-shadow: var(--glow);
+            border-color: var(--accent);
+        }
+
+        /* Hero Section 3D */
+        .hero-section {
+            background: linear-gradient(145deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.1) 100%);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: 70px 24px;
+            text-align: center;
+            margin-bottom: 50px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            transform-style: preserve-3d;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(99,102,241,0.25);
+            backdrop-filter: blur(12px);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeUp 0.7s ease;
+        }
+
+        .page-title h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, #fff, #fbbf24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: fadeUp 0.8s ease;
+        }
+
+        .page-title p {
+            font-size: 1.25rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 600px;
+            margin: 0 auto;
+            animation: fadeUp 0.9s ease;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        @media (min-width: 992px) {
+            .content-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Cards Glass */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-gradient);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--warning), var(--warning-light));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            transition: var(--transition);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: var(--glow);
+        }
+
+        .btn {
+            padding: 16px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--warning), var(--warning-light));
+            color: white;
+            box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 8px 20px var(--accent-glow);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px var(--accent-glow);
+        }
+
+        .btn-sm {
+            padding: 10px 20px;
+            font-size: 0.875rem;
+            width: auto;
+        }
+
+        /* Info Box */
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 24px;
+        }
+
+        .info-icon {
+            font-size: 1.5rem;
+            color: var(--accent);
+        }
+
+        /* QRIS Box */
+        .qris-box {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .transaction-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--warning);
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .qris-img {
+            max-width: 300px;
+            width: 100%;
+            border-radius: var(--radius-sm);
+            margin: 30px auto;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-lg);
+            display: block;
+        }
+
+        .scan-guide {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(245, 158, 11, 0.1);
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--warning);
+        }
+
+        .guide-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--warning-light);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .guide-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .guide-list li {
+            margin-bottom: 12px;
+            padding-left: 28px;
+            position: relative;
+            color: var(--text-secondary);
+        }
+
+        .guide-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: var(--warning);
+            font-weight: bold;
+        }
+
+        /* History List */
+        .history-list {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .history-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .history-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+
+        .history-list::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .history-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .history-date {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-brand {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        /* Popup */
+        .popup {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 16px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--success);
+            color: var(--text-primary);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            z-index: 9999;
+            animation: fadeIn 0.3s ease;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+
+        .loader-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--accent-glow);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card-solid);
+            backdrop-filter: blur(12px);
+            padding: 48px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 60px;
+            font-weight: 700;
+            box-shadow: var(--glow);
+        }
+
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 16px; }
+            .nav-links { display: none; }
+            .page-title h1 { font-size: 2.2rem; }
+            .card { padding: 30px 20px; }
+            .card-header { flex-direction: column; text-align: center; }
+            .theme-toggle { top: 20px; right: 20px; width: 44px; height: 44px; }
+            .transaction-info { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas 3D Background -->
+    <canvas id="canvas-3d-bg"></canvas>
+    <div class="ambient-overlay"></div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader">
+        <div class="loader-spinner"></div>
+        <p style="margin-top: 20px; color: var(--text-secondary);">Memuat sistem donasi 3D...</p>
+    </div>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="themeToggleBtn">
+        <i class="fas fa-moon" id="theme-icon"></i>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar container">
+        <a href="/" class="logo">
+            <div class="logo-icon"><i class="fas fa-heart"></i></div>
+            IkyApi'S
+        </a>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-link">Dashboard</a>
+            <a href="/api" class="nav-link">Api</a>
+            <a href="/kuis" class="nav-link">Games</a>
+            <a href="/donate" class="nav-link active">Donasi</a>
+            <a href="/forum" class="nav-link">Forum</a>
+            <a href="/about" class="nav-link">Tentang</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section container">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>Dukung Pengembangan</span>
+            </div>
+            <div class="page-title">
+                <h1>Dukung Proyek Kami</h1>
+                <p>Bantu server tetap online dan dukung pengembangan platform IkyApi'S yang berkelanjutan. Setiap kontribusi berarti!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content container">
+        <div class="content-grid">
+            <!-- Payment Form Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-qrcode"></i></div>
+                    <h2 class="card-title">Buat Pembayaran</h2>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="nominal">Jumlah (min 1.000)</label>
+                    <input type="number" id="nominal" class="form-input" placeholder="Masukkan nominal dalam IDR">
+                </div>
+
+                <div class="info-box">
+                    <i class="fas fa-shield-alt info-icon"></i>
+                    <div class="info-text">Harap selesaikan verifikasi reCAPTCHA terlebih dahulu untuk mengaktifkan tombol pembayaran</div>
+                </div>
+
+                <div class="form-group">
+                    <div class="g-recaptcha" data-sitekey="6LeacicsAAAAAEScPaHuIG72-5FHtQ025h_vkNZJ" data-callback="recaptchaSuccess"></div>
+                </div>
+
+                <button id="btnQris" class="btn btn-primary" onclick="generateQRIS()" style="display: none;">
+                    <i class="fas fa-qrcode"></i> Buat QRIS
+                </button>
+
+                <!-- QRIS Box -->
+                <div id="qrisBox" class="qris-box">
+                    <div class="transaction-info">
+                        <div class="info-item">
+                            <div class="info-label">ID Transaksi</div>
+                            <div class="info-value" id="trxId">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Kadaluarsa</div>
+                            <div class="info-value" id="expired">-</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Biaya Admin</div>
+                            <div class="info-value" id="adminFee">-</div>
+                        </div>
+                    </div>
+
+                    <img id="qrisImg" class="qris-img" alt="QRIS Code">
+
+                    <div class="scan-guide">
+                        <h3 class="guide-title"><i class="fas fa-mobile-alt"></i> Cara Scan QRIS</h3>
+                        <ul class="guide-list">
+                            <li>Buka aplikasi e-wallet (DANA, OVO, Gopay, ShopeePay, dll)</li>
+                            <li>Pilih menu "Scan" atau "QR Scan"</li>
+                            <li>Arahkan kamera ke kode QRIS di atas</li>
+                            <li>Verifikasi jumlah dan klik Bayar</li>
+                            <li>Setelah pembayaran, klik "Cek Status Pembayaran"</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="cekMutasi()" style="margin-top: 20px;">
+                        <i class="fas fa-sync-alt"></i> Cek Status Pembayaran
+                    </button>
+                </div>
+            </div>
+
+            <!-- Payment History Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon"><i class="fas fa-history"></i></div>
+                    <h2 class="card-title">Riwayat Pembayaran</h2>
+                </div>
+
+                <div id="riwayatList" class="history-list">
+                    <div class="history-item">Memuat riwayat transaksi...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">© 2025 IkyApi'S — Dukung Kreativitas Tanpa Batas</p>
+                <div class="security-badge">
+                    <i class="fas fa-lock"></i>
+                    <span>Proses Pembayaran Aman</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Three.js Background Animation -->
+    <script type="module">
+        import * as THREE from 'three';
+
+        const canvas = document.getElementById('canvas-3d-bg');
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 1.5, 12);
+        camera.lookAt(0, 0, 0);
+
+        // Lighting
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(2, 5, 4);
+        scene.add(dirLight);
+        const backLight = new THREE.PointLight(0x6366f1, 0.5);
+        backLight.position.set(-1, 2, -5);
+        scene.add(backLight);
+
+        // Floating Heart Objects
+        const heartGroup = new THREE.Group();
+        
+        // Main Heart Shape (using torus knot with heart-like color)
+        const heartKnot = new THREE.Mesh(
+            new THREE.TorusKnotGeometry(1.1, 0.28, 180, 24, 3, 4),
+            new THREE.MeshStandardMaterial({ color: 0xf59e0b, emissive: 0x7c2d12, roughness: 0.3, metalness: 0.6 })
+        );
+        heartGroup.add(heartKnot);
+        
+        // Orbiting particles
+        const particleCount = 80;
+        const particles = [];
+        for (let i = 0; i < particleCount; i++) {
+            const particle = new THREE.Mesh(
+                new THREE.SphereGeometry(0.08, 8, 8),
+                new THREE.MeshStandardMaterial({ color: 0xfbbf24, emissive: 0xb45309 })
+            );
+            heartGroup.add(particle);
+            particles.push(particle);
+        }
+        
+        scene.add(heartGroup);
+        
+        // Floating stars
+        const starCount = 1500;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPos[i*3] = (Math.random() - 0.5) * 200;
+            starPos[i*3+1] = (Math.random() - 0.5) * 100;
+            starPos[i*3+2] = (Math.random() - 0.5) * 80 - 30;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({ color: 0xffaa44, size: 0.1, transparent: true, opacity: 0.5 });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+        
+        let time = 0;
+        
+        function animate3D() {
+            requestAnimationFrame(animate3D);
+            time += 0.008;
+            
+            heartKnot.rotation.x = time * 0.4;
+            heartKnot.rotation.y = time * 0.6;
+            
+            particles.forEach((part, idx) => {
+                const angle = time * 0.8 + (idx * Math.PI * 2 / particleCount);
+                const radius = 1.8;
+                part.position.x = Math.cos(angle) * radius;
+                part.position.z = Math.sin(angle) * radius;
+                part.position.y = Math.sin(angle * 2) * 0.4;
+            });
+            
+            heartGroup.position.y = Math.sin(time * 0.6) * 0.1;
+            stars.rotation.y = time * 0.03;
+            
+            renderer.render(scene, camera);
+        }
+        
+        animate3D();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        
+        window.update3DTheme = (isDark) => {
+            const color = isDark ? 0xf59e0b : 0xd97706;
+            heartKnot.material.color.setHex(color);
+        };
+    </script>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute('data-theme') !== 'light';
+            html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            localStorage.setItem('donate_theme', isDark ? 'dark' : 'light');
+            if (window.update3DTheme) window.update3DTheme(isDark);
+        }
+
+        function loadTheme() {
+            const saved = localStorage.getItem('donate_theme');
+            const isDark = saved ? saved === 'dark' : true;
+            document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+            if (window.update3DTheme) window.update3DTheme(isDark);
+        }
+
+        function showPopup(message) {
+            const popup = document.createElement('div');
+            popup.className = 'popup';
+            popup.innerHTML = `<i class="fas fa-check-circle" style="color: var(--success);"></i> ${message}`;
+            document.body.appendChild(popup);
+            setTimeout(() => {
+                popup.style.opacity = '0';
+                setTimeout(() => popup.remove(), 300);
+            }, 3500);
+        }
+
+        function recaptchaSuccess() {
+            document.getElementById("btnQris").style.display = "flex";
+        }
+
+        async function loadRiwayat() {
+            try {
+                let url = `https://ikyrestweb.vercel.app/orderkuota/mutasiqr?apikey=IkyRestApiPremium`;
+                let res = await fetch(url);
+                let data = await res.json();
+                let list = document.getElementById("riwayatList");
+                list.innerHTML = "";
+
+                if (!data.status || !data.result || data.result.length === 0) {
+                    list.innerHTML = "<div class='history-item'>Belum ada riwayat transaksi</div>";
+                    return;
+                }
+
+                data.result.forEach((item) => {
+                    list.innerHTML += `
+                        <div class='history-item'>
+                            <div class='history-date'><i class="far fa-calendar"></i> ${item.tanggal}</div>
+                            <div class='history-brand'>${item.brand.name}</div>
+                            <div>
+                                <button onclick="downloadBukti('${item.tanggal}','${item.brand.name}')" class='btn btn-primary btn-sm'>
+                                    <i class="fas fa-download"></i> Unduh Bukti
+                                </button>
+                            </div>
+                        </div>`;
+                });
+            } catch (error) {
+                document.getElementById("riwayatList").innerHTML = "<div class='history-item'>Gagal memuat riwayat</div>";
+            }
+        }
+
+        async function generateQRIS() {
+            let nominal = document.getElementById("nominal").value;
+            if (nominal < 1000) {
+                showPopup("Jumlah minimum adalah 1.000 IDR");
+                return;
+            }
+
+            let admin = Math.floor(Math.random() * 20) + 88;
+            let total = parseInt(nominal) + admin;
+
+            let token = grecaptcha.getResponse();
+            if (!token) {
+                showPopup("Harap selesaikan verifikasi reCAPTCHA!");
+                return;
+            }
+
+            let url = `https://ikyrestweb.vercel.app/orderkuota/createpayment?apikey=IkyRestApiPremium&amount=${total}`;
+
+            try {
+                let res = await fetch(url);
+                let data = await res.json();
+
+                if (!data.status) {
+                    showPopup("Gagal membuat QRIS");
+                    return;
+                }
+
+                let result = data.result;
+                document.getElementById("trxId").innerText = result.idtransaksi;
+                document.getElementById("expired").innerText = result.expired;
+                document.getElementById("qrisImg").src = result.imageqris.url;
+                document.getElementById("adminFee").innerText = admin + " IDR";
+                document.getElementById("qrisBox").style.display = "block";
+                showPopup("QRIS berhasil dibuat! Silakan scan untuk membayar.");
+            } catch (error) {
+                showPopup("Kesalahan jaringan, silakan coba lagi");
+            }
+        }
+
+        async function cekMutasi() {
+            await loadRiwayat();
+            document.getElementById("qrisBox").style.display = "none";
+            showPopup("Riwayat pembayaran diperbarui");
+        }
+
+        function downloadBukti(tanggal, brand) {
+            let text = `Bukti Pembayaran IkyApi'S\nTanggal: ${tanggal}\nBrand: ${brand}\n\nTerima kasih telah mendukung pengembangan IkyApi'S!`;
+            let blob = new Blob([text], { type: 'text/plain' });
+            let link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `bukti-${tanggal.replace(/\//g, '-')}.txt`;
+            link.click();
+            showPopup("Bukti berhasil diunduh");
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTheme();
+            loadRiwayat();
+            setInterval(loadRiwayat, 8000);
+            
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.remove(), 500);
+            }, 800);
+        });
+    </script>
+</body>
+</html>
